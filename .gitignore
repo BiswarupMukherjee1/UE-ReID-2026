@@ -1,0 +1,21 @@
+# Model weights
+*.pth
+
+# Saved embeddings
+*.npy
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Tensorboard logs
+tb_log/
+
+# Datasets
+urban-elements-re-id-challenge-2026/
+UrbAM-ReID/
+
+# Misc
+*.zip
+{logs}/

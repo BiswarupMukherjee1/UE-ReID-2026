@@ -1,0 +1,90 @@
+nohup: no se tendrá en cuenta la entrada
+/home/alumnos/e558995/.local/lib/python3.10/site-packages/torch/nn/init.py:412: UserWarning: Initializing zero-element tensors is a no-op
+  warnings.warn("Initializing zero-element tensors is a no-op")
+Building query/gallery split from train set...
+Query: 3030 images, Gallery: 8145 images
+Unique query identities: 1015
+Loading model from /media/DiscoLocal/IPCV/UE-ReID/experiments/exp07_v4_urbam/checkpoint/part_attention_vit_60.pth
+using Transformer_type: part token vit as a backbone
+using stride: [16, 16], and patch number is num_y16 * num_x8
+using drop_out rate is : 0.0
+using attn_drop_out rate is : 0.0
+using drop_path rate is : 0.1
+Resized position embedding from size:torch.Size([1, 197, 768]) to size: torch.Size([1, 132, 768]) with height:16 width: 8
+Load 153 / 155 layers.
+Loading pretrained ImageNet model......from /media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/model/jx_vit_base_p16_224-80ecf9dd.pth
+===========building our part attention vit===========
+Loading trained model from /media/DiscoLocal/IPCV/UE-ReID/experiments/exp07_v4_urbam/checkpoint/part_attention_vit_60.pth
+Extracting query features...
+Extracting gallery features...
+qf: (3030, 768), gf: (8145, 768)
+Saved validation features.
+
+=== Parameter sweep ===
+  k1   k2   lambda      mAP      R@1      R@5
+  10    3      0.1   0.0211   0.0139   0.0591
+  10    3      0.2   0.0191   0.0132   0.0561
+  10    3      0.3   0.0171   0.0129   0.0525
+  10    3      0.5   0.0113   0.0102   0.0396
+  10    4      0.1   0.0284   0.0274   0.1017
+  10    4      0.2   0.0252   0.0257   0.0941
+  10    4      0.3   0.0222   0.0234   0.0868
+  10    4      0.5   0.0115   0.0132   0.0521
+  10    6      0.1   0.0416   0.0541   0.1756
+  10    6      0.2   0.0354   0.0492   0.1551
+  10    6      0.3   0.0288   0.0429   0.1317
+  10    6      0.5   0.0090   0.0109   0.0436
+  10    8      0.1   0.0559   0.0875   0.2333
+  10    8      0.2   0.0463   0.0736   0.1987
+  10    8      0.3   0.0343   0.0571   0.1637
+  10    8      0.5   0.0084   0.0116   0.0449
+  15    3      0.1   0.0219   0.0152   0.0617
+  15    3      0.2   0.0199   0.0149   0.0594
+  15    3      0.3   0.0179   0.0145   0.0561
+  15    3      0.5   0.0113   0.0102   0.0376
+  15    4      0.1   0.0303   0.0277   0.1089
+  15    4      0.2   0.0267   0.0257   0.0997
+  15    4      0.3   0.0230   0.0234   0.0904
+  15    4      0.5   0.0114   0.0119   0.0469
+  15    6      0.1   0.0447   0.0627   0.1944
+  15    6      0.2   0.0375   0.0541   0.1719
+  15    6      0.3   0.0292   0.0429   0.1462
+  15    6      0.5   0.0092   0.0106   0.0462
+  15    8      0.1   0.0602   0.1043   0.2630
+  15    8      0.2   0.0492   0.0875   0.2254
+  15    8      0.3   0.0361   0.0673   0.1769
+  15    8      0.5   0.0090   0.0132   0.0472
+  20    3      0.1   0.0224   0.0162   0.0624
+  20    3      0.2   0.0203   0.0155   0.0611
+  20    3      0.3   0.0181   0.0149   0.0561
+  20    3      0.5   0.0111   0.0109   0.0333
+  20    4      0.1   0.0304   0.0300   0.1092
+  20    4      0.2   0.0267   0.0277   0.1003
+  20    4      0.3   0.0230   0.0251   0.0904
+  20    4      0.5   0.0110   0.0116   0.0459
+  20    6      0.1   0.0450   0.0620   0.1947
+  20    6      0.2   0.0369   0.0531   0.1693
+  20    6      0.3   0.0287   0.0432   0.1370
+  20    6      0.5   0.0088   0.0096   0.0439
+  20    8      0.1   0.0599   0.1063   0.2594
+  20    8      0.2   0.0487   0.0881   0.2182
+  20    8      0.3   0.0347   0.0690   0.1680
+  20    8      0.5   0.0083   0.0106   0.0439
+  25    3      0.1   0.0224   0.0155   0.0644
+  25    3      0.2   0.0202   0.0149   0.0604
+  25    3      0.3   0.0178   0.0139   0.0538
+  25    3      0.5   0.0108   0.0099   0.0310
+  25    4      0.1   0.0306   0.0307   0.1086
+  25    4      0.2   0.0267   0.0274   0.1013
+  25    4      0.3   0.0226   0.0238   0.0888
+  25    4      0.5   0.0103   0.0106   0.0419
+  25    6      0.1   0.0455   0.0634   0.1970
+  25    6      0.2   0.0369   0.0538   0.1700
+  25    6      0.3   0.0285   0.0429   0.1383
+  25    6      0.5   0.0085   0.0092   0.0416
+  25    8      0.1   0.0594   0.1053   0.2601
+  25    8      0.2   0.0474   0.0894   0.2155
+  25    8      0.3   0.0336   0.0670   0.1630
+  25    8      0.5   0.0078   0.0089   0.0399
+
+Best: mAP=0.0602 with k1=15, k2=8, lambda=0.1

@@ -1,0 +1,323 @@
+2026-04-20 18:38:38,367 PAT INFO: Saving model in the path :models/./exp01_stage1
+2026-04-20 18:38:38,367 PAT INFO: Namespace(config_file='/media/DiscoLocal/IPCV/UE-ReID/experiments/exp01_sequential/stage1_urbam/config/train.yml', opts=[], local_rank=0)
+2026-04-20 18:38:38,367 PAT INFO: Loaded configuration file /media/DiscoLocal/IPCV/UE-ReID/experiments/exp01_sequential/stage1_urbam/config/train.yml
+2026-04-20 18:38:38,367 PAT INFO: 
+# =============================================================================
+# exp01_sequential — Stage 1: UrbAM only (60 epochs, from ImageNet)
+#
+# Goal: learn c004 back-view features from UrbAM inv splits before
+#       ever seeing competition data.
+# NOTE: TEST uses UrbanElementsReID (not UrbAM) because UrbAM has no
+#       query/gallery split — eval shows 100% mAP as usual (train set eval).
+#
+# Run from: /media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/
+#   python train.py --config_file /media/DiscoLocal/IPCV/UE-ReID/experiments/exp01_sequential/stage1_urbam/config/train.yml
+#
+# Output checkpoint: models/exp01_stage1/part_attention_vit_60.pth
+# =============================================================================
+
+MODEL:
+  PRETRAIN_CHOICE: 'imagenet'
+  PRETRAIN_PATH: '/media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/model'
+  IF_LABELSMOOTH: 'on'
+  IF_WITH_CENTER: 'no'
+  NAME: 'part_attention_vit'
+  NO_MARGIN: True
+  DEVICE_ID: ('0')
+  TRANSFORMER_TYPE: 'vit_base_patch16_224_TransReID'
+  STRIDE_SIZE: [16, 16]
+
+INPUT:
+  SIZE_TRAIN: [256, 128]
+  SIZE_TEST: [256, 128]
+  REA:
+    ENABLED: False
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  LGT:
+    DO_LGT: True
+    PROB: 0.5
+
+DATASETS:
+  TRAIN: ('UrbAM',)
+  TEST: ('UrbanElementsReID',)
+  ROOT_DIR: '/media/DiscoLocal/IPCV/UE-ReID/urban-elements-re-id-challenge-2026/Urban2026/'
+
+DATALOADER:
+  SAMPLER: 'softmax_triplet'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: 'SGD'
+  MAX_EPOCHS: 60
+  BASE_LR: 0.001
+  IMS_PER_BATCH: 64
+  WARMUP_METHOD: 'linear'
+  LARGE_FC_LR: False
+  CHECKPOINT_PERIOD: 10
+  LOG_PERIOD: 60
+  EVAL_PERIOD: 10
+  WEIGHT_DECAY: 1e-4
+  WEIGHT_DECAY_BIAS: 1e-4
+  BIAS_LR_FACTOR: 2
+  SEED: 1234
+
+TEST:
+  EVAL: True
+  IMS_PER_BATCH: 128
+  RE_RANKING: False
+  WEIGHT: ''
+  NECK_FEAT: 'before'
+  FEAT_NORM: True
+
+LOG_ROOT: 'models/'
+TB_LOG_ROOT: './tb_log/'
+LOG_NAME: './exp01_stage1'
+
+2026-04-20 18:38:38,367 PAT INFO: Running with config:
+DATALOADER:
+  CAMERA_TO_DOMAIN: False
+  DELETE_REM: False
+  DROP_LAST: False
+  INDIVIDUAL: False
+  NAIVE_WAY: True
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+  SAMPLER: softmax_triplet
+DATASETS:
+  COMBINEALL: False
+  ROOT_DIR: /media/DiscoLocal/IPCV/UE-ReID/urban-elements-re-id-challenge-2026/Urban2026/
+  TEST: ('UrbanElementsReID',)
+  TRAIN: ('UrbAM',)
+INPUT:
+  CJ:
+    BRIGHTNESS: 0.15
+    CONTRAST: 0.15
+    ENABLED: False
+    HUE: 0.1
+    PROB: 1.0
+    SATURATION: 0.1
+  DO_AUGMIX: False
+  DO_AUTOAUG: False
+  DO_FLIP: True
+  DO_PAD: True
+  FLIP_PROB: 0.5
+  LGT:
+    DO_LGT: True
+    PROB: 0.5
+  PADDING: 10
+  PADDING_MODE: constant
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  REA:
+    ENABLED: False
+    MEAN: [123.675, 116.28, 103.53]
+    PROB: 0.5
+  RPT:
+    ENABLED: False
+    PROB: 0.5
+  SIZE_TEST: [256, 128]
+  SIZE_TRAIN: [256, 128]
+LOG_NAME: ./exp01_stage1
+LOG_ROOT: models/
+MODEL:
+  ATT_DROP_RATE: 0.0
+  CLUSTER_K: 10
+  COS_LAYER: False
+  DEVICE: cuda
+  DEVICE_ID: 0
+  DIST_TRAIN: False
+  DROP_OUT: 0.0
+  DROP_PATH: 0.1
+  FREEZE_PATCH_EMBED: True
+  ID_LOSS_TYPE: softmax
+  ID_LOSS_WEIGHT: 1.0
+  IF_LABELSMOOTH: on
+  IF_WITH_CENTER: no
+  LAST_STRIDE: 1
+  METRIC_LOSS_TYPE: triplet
+  NAME: part_attention_vit
+  NECK: bnneck
+  NO_MARGIN: True
+  PATCH_EMBED_TYPE: 
+  PC_LOSS: True
+  PC_LR: 1.0
+  PC_SCALE: 0.02
+  PRETRAIN_CHOICE: imagenet
+  PRETRAIN_PATH: /media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/model
+  SOFT_LABEL: True
+  SOFT_LAMBDA: 0.5
+  SOFT_WEIGHT: 0.5
+  STRIDE_SIZE: [16, 16]
+  TRANSFORMER_TYPE: vit_base_patch16_224_TransReID
+  TRIPLET_LOSS_WEIGHT: 1.0
+SOLVER:
+  BASE_LR: 0.001
+  BIAS_LR_FACTOR: 2
+  CENTER_LOSS_WEIGHT: 0.0005
+  CENTER_LR: 0.5
+  CHECKPOINT_PERIOD: 10
+  COSINE_MARGIN: 0.5
+  COSINE_SCALE: 30
+  EVAL_PERIOD: 10
+  GAMMA: 0.1
+  IMS_PER_BATCH: 64
+  LARGE_FC_LR: False
+  LOG_PERIOD: 60
+  MARGIN: 0.3
+  MAX_EPOCHS: 60
+  MOMENTUM: 0.9
+  OPTIMIZER_NAME: SGD
+  SEED: 1234
+  STEPS: (40, 70)
+  WARMUP_EPOCHS: 5
+  WARMUP_FACTOR: 0.01
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+TB_LOG_ROOT: ./tb_log/
+TEST:
+  DIST_MAT: dist_mat.npy
+  EVAL: True
+  FEAT_NORM: True
+  IMS_PER_BATCH: 128
+  NECK_FEAT: before
+  RE_RANKING: False
+  WEIGHT: 
+2026-04-20 18:38:38,382 PAT INFO: => Loaded UrbAM
+2026-04-20 18:38:38,382 PAT INFO:   ----------------------------------------
+2026-04-20 18:38:38,383 PAT INFO:   subset   | # ids | # images | # cameras
+2026-04-20 18:38:38,383 PAT INFO:   ----------------------------------------
+2026-04-20 18:38:38,383 PAT INFO:   train    |   193 |     2821 |         4
+2026-04-20 18:38:38,383 PAT INFO:   ----------------------------------------
+2026-04-20 18:38:38,445 PAT INFO: => Loaded UrbanElementsReID
+2026-04-20 18:38:38,445 PAT INFO:   ----------------------------------------
+2026-04-20 18:38:38,445 PAT INFO:   subset   | # ids | # images | # cameras
+2026-04-20 18:38:38,445 PAT INFO:   ----------------------------------------
+2026-04-20 18:38:38,445 PAT INFO:   query    |  1088 |    11175 |         3
+2026-04-20 18:38:38,446 PAT INFO:   gallery  |  1088 |    11175 |         3
+2026-04-20 18:38:38,446 PAT INFO:   ----------------------------------------
+2026-04-20 18:38:39,677 PAT.train INFO: Number of parameter: 86.67M
+2026-04-20 18:38:40,068 PAT.train INFO: start training
+2026-04-20 18:39:00,271 PAT.train INFO: Epoch 1 done. Time per batch: 0.272[s] Speed: 235.7[samples/s]
+2026-04-20 18:39:09,289 PAT.train INFO: Epoch 2 done. Time per batch: 0.248[s] Speed: 257.6[samples/s]
+2026-04-20 18:39:18,574 PAT.train INFO: Epoch 3 done. Time per batch: 0.249[s] Speed: 257.0[samples/s]
+2026-04-20 18:39:28,124 PAT.train INFO: Epoch 4 done. Time per batch: 0.249[s] Speed: 256.5[samples/s]
+2026-04-20 18:39:37,593 PAT.train INFO: Epoch 5 done. Time per batch: 0.254[s] Speed: 252.1[samples/s]
+2026-04-20 18:39:46,962 PAT.train INFO: Epoch 6 done. Time per batch: 0.251[s] Speed: 254.7[samples/s]
+2026-04-20 18:39:56,252 PAT.train INFO: Epoch 7 done. Time per batch: 0.256[s] Speed: 250.0[samples/s]
+2026-04-20 18:40:05,528 PAT.train INFO: Epoch 8 done. Time per batch: 0.256[s] Speed: 250.3[samples/s]
+2026-04-20 18:40:14,928 PAT.train INFO: Epoch 9 done. Time per batch: 0.252[s] Speed: 253.9[samples/s]
+2026-04-20 18:40:24,361 PAT.train INFO: Epoch 10 done. Time per batch: 0.253[s] Speed: 253.0[samples/s]
+2026-04-20 18:40:24,361 PAT.test INFO: Enter inferencing
+2026-04-20 18:41:34,046 PAT.test INFO: Validation Results 
+2026-04-20 18:41:34,046 PAT.test INFO: mAP: 25.3%
+2026-04-20 18:41:34,046 PAT.test INFO: CMC curve, Rank-1  :46.1%
+2026-04-20 18:41:34,046 PAT.test INFO: CMC curve, Rank-5  :67.3%
+2026-04-20 18:41:34,046 PAT.test INFO: CMC curve, Rank-10 :75.8%
+2026-04-20 18:41:34,046 PAT.test INFO: total inference time: 69.68
+2026-04-20 18:41:34,054 PAT.train INFO: =====best epoch: 10=====
+2026-04-20 18:41:44,100 PAT.train INFO: Epoch 11 done. Time per batch: 0.263[s] Speed: 243.2[samples/s]
+2026-04-20 18:41:53,906 PAT.train INFO: Epoch 12 done. Time per batch: 0.263[s] Speed: 243.3[samples/s]
+2026-04-20 18:42:03,705 PAT.train INFO: Epoch 13 done. Time per batch: 0.263[s] Speed: 243.5[samples/s]
+2026-04-20 18:42:13,784 PAT.train INFO: Epoch 14 done. Time per batch: 0.270[s] Speed: 236.7[samples/s]
+2026-04-20 18:42:23,578 PAT.train INFO: Epoch 15 done. Time per batch: 0.263[s] Speed: 243.7[samples/s]
+2026-04-20 18:42:33,369 PAT.train INFO: Epoch 16 done. Time per batch: 0.263[s] Speed: 243.8[samples/s]
+2026-04-20 18:42:42,949 PAT.train INFO: Epoch 17 done. Time per batch: 0.264[s] Speed: 242.4[samples/s]
+2026-04-20 18:42:52,846 PAT.train INFO: Epoch 18 done. Time per batch: 0.265[s] Speed: 241.2[samples/s]
+2026-04-20 18:43:02,657 PAT.train INFO: Epoch 19 done. Time per batch: 0.263[s] Speed: 243.2[samples/s]
+2026-04-20 18:43:12,498 PAT.train INFO: Epoch 20 done. Time per batch: 0.264[s] Speed: 242.5[samples/s]
+2026-04-20 18:43:12,498 PAT.test INFO: Enter inferencing
+2026-04-20 18:44:24,276 PAT.test INFO: Validation Results 
+2026-04-20 18:44:24,292 PAT.test INFO: mAP: 25.0%
+2026-04-20 18:44:24,292 PAT.test INFO: CMC curve, Rank-1  :45.5%
+2026-04-20 18:44:24,292 PAT.test INFO: CMC curve, Rank-5  :66.5%
+2026-04-20 18:44:24,292 PAT.test INFO: CMC curve, Rank-10 :74.6%
+2026-04-20 18:44:24,292 PAT.test INFO: total inference time: 71.79
+2026-04-20 18:44:35,178 PAT.train INFO: Epoch 21 done. Time per batch: 0.281[s] Speed: 228.1[samples/s]
+2026-04-20 18:44:45,185 PAT.train INFO: Epoch 22 done. Time per batch: 0.268[s] Speed: 238.4[samples/s]
+2026-04-20 18:44:55,039 PAT.train INFO: Epoch 23 done. Time per batch: 0.264[s] Speed: 242.1[samples/s]
+2026-04-20 18:45:04,954 PAT.train INFO: Epoch 24 done. Time per batch: 0.266[s] Speed: 240.7[samples/s]
+2026-04-20 18:45:15,015 PAT.train INFO: Epoch 25 done. Time per batch: 0.270[s] Speed: 237.1[samples/s]
+2026-04-20 18:45:25,154 PAT.train INFO: Epoch 26 done. Time per batch: 0.265[s] Speed: 241.6[samples/s]
+2026-04-20 18:45:34,788 PAT.train INFO: Epoch 27 done. Time per batch: 0.266[s] Speed: 241.0[samples/s]
+2026-04-20 18:45:44,764 PAT.train INFO: Epoch 28 done. Time per batch: 0.267[s] Speed: 239.3[samples/s]
+2026-04-20 18:45:54,434 PAT.train INFO: Epoch 29 done. Time per batch: 0.266[s] Speed: 240.2[samples/s]
+2026-04-20 18:46:04,300 PAT.train INFO: Epoch 30 done. Time per batch: 0.265[s] Speed: 241.9[samples/s]
+2026-04-20 18:46:04,300 PAT.test INFO: Enter inferencing
+2026-04-20 18:47:13,488 PAT.test INFO: Validation Results 
+2026-04-20 18:47:13,510 PAT.test INFO: mAP: 24.9%
+2026-04-20 18:47:13,510 PAT.test INFO: CMC curve, Rank-1  :45.3%
+2026-04-20 18:47:13,510 PAT.test INFO: CMC curve, Rank-5  :65.7%
+2026-04-20 18:47:13,510 PAT.test INFO: CMC curve, Rank-10 :74.0%
+2026-04-20 18:47:13,510 PAT.test INFO: total inference time: 69.21
+2026-04-20 18:47:23,879 PAT.train INFO: Epoch 31 done. Time per batch: 0.268[s] Speed: 238.4[samples/s]
+2026-04-20 18:47:34,092 PAT.train INFO: Epoch 32 done. Time per batch: 0.274[s] Speed: 233.6[samples/s]
+2026-04-20 18:47:43,489 PAT.train INFO: Epoch 33 done. Time per batch: 0.252[s] Speed: 254.0[samples/s]
+2026-04-20 18:47:52,623 PAT.train INFO: Epoch 34 done. Time per batch: 0.252[s] Speed: 254.3[samples/s]
+2026-04-20 18:48:01,996 PAT.train INFO: Epoch 35 done. Time per batch: 0.251[s] Speed: 254.9[samples/s]
+2026-04-20 18:48:11,549 PAT.train INFO: Epoch 36 done. Time per batch: 0.249[s] Speed: 256.7[samples/s]
+2026-04-20 18:48:20,914 PAT.train INFO: Epoch 37 done. Time per batch: 0.251[s] Speed: 254.9[samples/s]
+2026-04-20 18:48:30,259 PAT.train INFO: Epoch 38 done. Time per batch: 0.250[s] Speed: 255.5[samples/s]
+2026-04-20 18:48:39,676 PAT.train INFO: Epoch 39 done. Time per batch: 0.252[s] Speed: 253.5[samples/s]
+2026-04-20 18:48:48,762 PAT.train INFO: Epoch 40 done. Time per batch: 0.250[s] Speed: 255.6[samples/s]
+2026-04-20 18:48:48,762 PAT.test INFO: Enter inferencing
+2026-04-20 18:49:55,952 PAT.test INFO: Validation Results 
+2026-04-20 18:49:55,965 PAT.test INFO: mAP: 26.0%
+2026-04-20 18:49:55,965 PAT.test INFO: CMC curve, Rank-1  :46.7%
+2026-04-20 18:49:55,966 PAT.test INFO: CMC curve, Rank-5  :66.6%
+2026-04-20 18:49:55,966 PAT.test INFO: CMC curve, Rank-10 :74.9%
+2026-04-20 18:49:55,966 PAT.test INFO: total inference time: 67.20
+2026-04-20 18:49:55,972 PAT.train INFO: =====best epoch: 40=====
+2026-04-20 18:50:06,184 PAT.train INFO: Epoch 41 done. Time per batch: 0.264[s] Speed: 242.8[samples/s]
+2026-04-20 18:50:16,776 PAT.train INFO: Epoch 42 done. Time per batch: 0.277[s] Speed: 231.2[samples/s]
+2026-04-20 18:50:26,111 PAT.train INFO: Epoch 43 done. Time per batch: 0.250[s] Speed: 255.7[samples/s]
+2026-04-20 18:50:35,413 PAT.train INFO: Epoch 44 done. Time per batch: 0.249[s] Speed: 256.6[samples/s]
+2026-04-20 18:50:44,802 PAT.train INFO: Epoch 45 done. Time per batch: 0.252[s] Speed: 254.2[samples/s]
+2026-04-20 18:50:54,115 PAT.train INFO: Epoch 46 done. Time per batch: 0.250[s] Speed: 256.3[samples/s]
+2026-04-20 18:51:03,444 PAT.train INFO: Epoch 47 done. Time per batch: 0.250[s] Speed: 255.9[samples/s]
+2026-04-20 18:51:12,851 PAT.train INFO: Epoch 48 done. Time per batch: 0.252[s] Speed: 253.7[samples/s]
+2026-04-20 18:51:22,005 PAT.train INFO: Epoch 49 done. Time per batch: 0.252[s] Speed: 253.8[samples/s]
+2026-04-20 18:51:31,368 PAT.train INFO: Epoch 50 done. Time per batch: 0.251[s] Speed: 255.0[samples/s]
+2026-04-20 18:51:31,368 PAT.test INFO: Enter inferencing
+2026-04-20 18:52:39,320 PAT.test INFO: Validation Results 
+2026-04-20 18:52:39,321 PAT.test INFO: mAP: 26.3%
+2026-04-20 18:52:39,321 PAT.test INFO: CMC curve, Rank-1  :46.7%
+2026-04-20 18:52:39,321 PAT.test INFO: CMC curve, Rank-5  :67.2%
+2026-04-20 18:52:39,321 PAT.test INFO: CMC curve, Rank-10 :75.3%
+2026-04-20 18:52:39,321 PAT.test INFO: total inference time: 67.95
+2026-04-20 18:52:39,324 PAT.train INFO: =====best epoch: 50=====
+2026-04-20 18:52:48,876 PAT.train INFO: Epoch 51 done. Time per batch: 0.247[s] Speed: 258.6[samples/s]
+2026-04-20 18:52:58,157 PAT.train INFO: Epoch 52 done. Time per batch: 0.249[s] Speed: 257.2[samples/s]
+2026-04-20 18:53:07,432 PAT.train INFO: Epoch 53 done. Time per batch: 0.256[s] Speed: 250.5[samples/s]
+2026-04-20 18:53:17,153 PAT.train INFO: Epoch 54 done. Time per batch: 0.261[s] Speed: 245.6[samples/s]
+2026-04-20 18:53:26,997 PAT.train INFO: Epoch 55 done. Time per batch: 0.271[s] Speed: 235.9[samples/s]
+2026-04-20 18:53:36,881 PAT.train INFO: Epoch 56 done. Time per batch: 0.265[s] Speed: 241.4[samples/s]
+2026-04-20 18:53:46,923 PAT.train INFO: Epoch 57 done. Time per batch: 0.269[s] Speed: 237.7[samples/s]
+2026-04-20 18:53:57,179 PAT.train INFO: Epoch 58 done. Time per batch: 0.275[s] Speed: 232.6[samples/s]
+2026-04-20 18:54:07,253 PAT.train INFO: Epoch 59 done. Time per batch: 0.270[s] Speed: 236.8[samples/s]
+2026-04-20 18:54:17,485 PAT.train INFO: Epoch 60 done. Time per batch: 0.274[s] Speed: 233.2[samples/s]
+2026-04-20 18:54:17,485 PAT.test INFO: Enter inferencing
+2026-04-20 18:55:26,059 PAT.test INFO: Validation Results 
+2026-04-20 18:55:26,301 PAT.test INFO: mAP: 26.4%
+2026-04-20 18:55:26,301 PAT.test INFO: CMC curve, Rank-1  :46.7%
+2026-04-20 18:55:26,301 PAT.test INFO: CMC curve, Rank-5  :66.7%
+2026-04-20 18:55:26,302 PAT.test INFO: CMC curve, Rank-10 :74.9%
+2026-04-20 18:55:26,302 PAT.test INFO: total inference time: 68.82
+2026-04-20 18:55:26,314 PAT.train INFO: =====best epoch: 60=====
+2026-04-20 18:55:29,711 PAT.train INFO: Number of parameter: 86.52M
+2026-04-20 18:55:30,065 PAT INFO: => Loaded UrbanElementsReID
+2026-04-20 18:55:30,066 PAT INFO:   ----------------------------------------
+2026-04-20 18:55:30,066 PAT INFO:   subset   | # ids | # images | # cameras
+2026-04-20 18:55:30,066 PAT INFO:   ----------------------------------------
+2026-04-20 18:55:30,066 PAT INFO:   query    |  1088 |    11175 |         3
+2026-04-20 18:55:30,066 PAT INFO:   gallery  |  1088 |    11175 |         3
+2026-04-20 18:55:30,066 PAT INFO:   ----------------------------------------
+2026-04-20 18:55:30,069 PAT.test INFO: Enter inferencing
+2026-04-20 18:56:37,713 PAT.test INFO: Validation Results 
+2026-04-20 18:56:37,713 PAT.test INFO: mAP: 26.4%
+2026-04-20 18:56:37,714 PAT.test INFO: CMC curve, Rank-1  :46.6%
+2026-04-20 18:56:37,714 PAT.test INFO: CMC curve, Rank-5  :66.9%
+2026-04-20 18:56:37,714 PAT.test INFO: CMC curve, Rank-10 :74.8%
+2026-04-20 18:56:37,714 PAT.test INFO: total inference time: 67.57

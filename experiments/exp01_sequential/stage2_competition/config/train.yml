@@ -1,0 +1,73 @@
+# =============================================================================
+# exp01_sequential — Stage 2: Competition data fine-tune (60 epochs, from Stage 1)
+#
+# Goal: re-adapt the UrbAM-trained model to the Kaggle competition domain.
+#
+# BEFORE RUNNING: update PRETRAIN_PATH below to the actual Stage 1 checkpoint.
+# The checkpoint will be at:
+#   Part-Aware-Transformer-main/models/exp01_stage1/part_attention_vit_60.pth
+#
+# Run from: /media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/
+#   python train.py --config_file /media/DiscoLocal/IPCV/UE-ReID/experiments/exp01_sequential/stage2_competition/config/train.yml
+#
+# Output checkpoint: models/exp01_stage2/part_attention_vit_60.pth
+# =============================================================================
+
+MODEL:
+  PRETRAIN_CHOICE: 'self'
+  PRETRAIN_PATH: '/media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/models/exp01_stage1/part_attention_vit_60.pth'
+  IF_LABELSMOOTH: 'on'
+  IF_WITH_CENTER: 'no'
+  NAME: 'part_attention_vit'
+  NO_MARGIN: True
+  DEVICE_ID: ('0')
+  TRANSFORMER_TYPE: 'vit_base_patch16_224_TransReID'
+  STRIDE_SIZE: [16, 16]
+
+INPUT:
+  SIZE_TRAIN: [256, 128]
+  SIZE_TEST: [256, 128]
+  REA:
+    ENABLED: False
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  LGT:
+    DO_LGT: True
+    PROB: 0.5
+
+DATASETS:
+  TRAIN: ('UrbanElementsReID',)
+  TEST: ('UrbanElementsReID',)
+  ROOT_DIR: '/media/DiscoLocal/IPCV/UE-ReID/urban-elements-re-id-challenge-2026/Urban2026/'
+
+DATALOADER:
+  SAMPLER: 'softmax_triplet'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: 'SGD'
+  MAX_EPOCHS: 60
+  BASE_LR: 0.001
+  IMS_PER_BATCH: 64
+  WARMUP_METHOD: 'linear'
+  LARGE_FC_LR: False
+  CHECKPOINT_PERIOD: 10
+  LOG_PERIOD: 60
+  EVAL_PERIOD: 10
+  WEIGHT_DECAY: 1e-4
+  WEIGHT_DECAY_BIAS: 1e-4
+  BIAS_LR_FACTOR: 2
+  SEED: 1234
+
+TEST:
+  EVAL: True
+  IMS_PER_BATCH: 128
+  RE_RANKING: False
+  WEIGHT: ''
+  NECK_FEAT: 'before'
+  FEAT_NORM: True
+
+LOG_ROOT: 'models/'
+TB_LOG_ROOT: './tb_log/'
+LOG_NAME: './exp01_stage2'
