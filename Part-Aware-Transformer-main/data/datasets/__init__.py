@@ -48,3 +48,4 @@ from .UrbanElementsReID_test import UrbanElementsReID_test
 
 __all__ = [k for k in globals().keys() if "builtin" not in k and not k.startswith("_")]
 from .UrbAM import UrbAM, UrbAM_c004only
+from .UAM_Unified import UAM_Unified

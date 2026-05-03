@@ -45,32 +45,24 @@ def part_attention_vit_do_train_with_amp(cfg,
     total_loss_meter = AverageMeter()
     reid_loss_meter = AverageMeter()
     pc_loss_meter = AverageMeter()
-    # ds_loss_meter = AverageMeter()
     acc_meter = AverageMeter()
 
     evaluator = R1_mAP_eval(num_query, max_rank=50, feat_norm=cfg.TEST.FEAT_NORM)
     scaler = amp.GradScaler(init_scale=512)
     batch_size = cfg.SOLVER.IMS_PER_BATCH
-    # train
     if cfg.MODEL.PC_LOSS:
         print('initialize the centers')
         model.train()
         for i, informations in enumerate(train_loader):
-            # measure data loading time
             with torch.no_grad():
-                #input = input.cuda(non_blocking=True)
                 input = informations['images'].cuda(non_blocking=True)
                 vid = informations['targets']
                 camid = informations['camid']
                 path = informations['img_path']
-                #input = input.view(-1, input.size(2), input.size(3), input.size(4))
-
-                # compute output
                 _, _, layerwise_feat_list = model(input)
                 patch_centers.get_soft_label(path, layerwise_feat_list[-1], vid=vid, camid=camid)
         print('initialization done')
     
-    best_mAP = 0.0
     best_index = 1
     for epoch in range(1, epochs + 1):
         start_time = time.time()
@@ -98,21 +90,12 @@ def part_attention_vit_do_train_with_amp(cfg,
             model.to(device)
             with amp.autocast(enabled=True):
                 score, layerwise_global_feat, layerwise_feat_list = model(img)
-                
-                ############## patch learning ######################
                 patch_agent, position = patch_centers.get_soft_label(img_path, layerwise_feat_list[-1], vid=vid, camid=camid)
                 l_ploss = cfg.MODEL.PC_LR
                 if cfg.MODEL.PC_LOSS:
                     feat = torch.stack(layerwise_feat_list[-1], dim=0)
                     feat = feat[:,::1,:]
-                    '''
-                    loss1: clustering loss(for patch centers)
-                    '''
                     ploss, all_posvid = pc_criterion(feat, patch_agent, position, patch_centers, vid=target, camid=target_cam)
-                    '''
-                    loss2: reid-specific loss
-                    (ID + Triplet loss)
-                    '''
                     reid_loss = loss_fn(score, layerwise_global_feat[-1], target, all_posvid=all_posvid, soft_label=cfg.MODEL.SOFT_LABEL, soft_weight=cfg.MODEL.SOFT_WEIGHT, soft_lambda=cfg.MODEL.SOFT_LAMBDA)
                 else:
                     ploss = torch.tensor([0.]).cuda()
@@ -122,10 +105,20 @@ def part_attention_vit_do_train_with_amp(cfg,
 
             scaler.scale(total_loss).backward()
 
+            # Gradient clipping: prevents NaN explosion with REA + SGD
+            scaler.unscale_(optimizer)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
+            # NaN/Inf guard: skip bad batches instead of corrupting weights
+            if any(torch.isnan(p.grad).any() or torch.isinf(p.grad).any()
+                   for p in model.parameters() if p.grad is not None):
+                optimizer.zero_grad()
+                scaler.update()
+                continue
+
             scaler.step(optimizer)
             scaler.update()
 
-            # score = scores[-1]
             if isinstance(score, list):
                 acc = (score[0].max(1)[1] == target).float().mean()
             else:
@@ -177,10 +170,8 @@ def part_attention_vit_do_train_with_amp(cfg,
                 tbWriter.add_scalar('val/mAP', mAP, epoch)
 
         if epoch % checkpoint_period == 0:
-            if best_mAP < mAP:
-                best_mAP = mAP
-                best_index = epoch
-                logger.info("=====best epoch: {}=====".format(best_index))
+            best_index = epoch
+            logger.info("=====saving epoch: {}=====".format(best_index))
             if cfg.MODEL.DIST_TRAIN:
                 if dist.get_rank() == 0:
                     torch.save(model.state_dict(),
@@ -200,17 +191,19 @@ def part_attention_vit_do_train_with_amp(cfg,
             testname = 'DG_' + testname.split('_')[1]
         val_loader, num_query = build_reid_test_loader(cfg, testname)
         do_inference(cfg, eval_model, val_loader, num_query)
-    
-    # remove useless path files
-    del_list = os.listdir(log_path)
-    for fname in del_list:
-        if '.pth' in fname:
-            os.remove(os.path.join(log_path, fname))
-            print('removing {}. '.format(os.path.join(log_path, fname)))
+
+    # remove useless path files - DISABLED to keep all checkpoints for ensemble
+    # del_list = os.listdir(log_path)
+    # for fname in del_list:
+    #     if '.pth' in fname:
+    #         os.remove(os.path.join(log_path, fname))
+    #         print('removing {}. '.format(os.path.join(log_path, fname)))
+
     # save final checkpoint
     print('saving final checkpoint.\nDo not interrupt the program!!!')
     torch.save(eval_model.state_dict(), os.path.join(log_path, cfg.MODEL.NAME + '_{}.pth'.format(epoch)))
     print('done!')
+
 
 def do_inference(cfg,
                  model,
@@ -221,7 +214,6 @@ def do_inference(cfg,
     logger.info("Enter inferencing")
 
     evaluator = R1_mAP_eval(num_query, max_rank=50, feat_norm=cfg.TEST.FEAT_NORM)
-
     evaluator.reset()
 
     if device:
@@ -238,10 +230,8 @@ def do_inference(cfg,
         pid = informations['targets']
         camids = informations['camid']
         imgpath = informations['img_path']
-        # domains = informations['others']['domains']
         with torch.no_grad():
             img = img.to(device)
-            # camids = camids.to(device)
             feat = model(img)
             evaluator.update((feat, pid, camids))
             img_path_list.extend(imgpath)

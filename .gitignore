@@ -19,3 +19,7 @@ UrbAM-ReID/
 # Misc
 *.zip
 {logs}/
+Part-Aware-Transformer-main/Part-Aware-Transformer/
+Part-Aware-Transformer-main/Part-Aware-Transformer/
+Part-Aware-Transformer-main/model/part_attention_vit_40/
+Part-Aware-Transformer-main/model/*.pth

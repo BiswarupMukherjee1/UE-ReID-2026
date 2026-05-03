@@ -8,6 +8,7 @@ from solver.scheduler_factory import create_scheduler
 from loss.build_loss import build_loss
 import random
 import torch
+torch.multiprocessing.set_sharing_strategy('file_system')
 import numpy as np
 import os
 import argparse
