@@ -106,8 +106,9 @@ def part_attention_vit_do_train_with_amp(cfg,
             scaler.scale(total_loss).backward()
 
             # Gradient clipping: prevents NaN explosion with REA + SGD
-            scaler.unscale_(optimizer)
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            if cfg.SOLVER.OPTIMIZER_NAME == 'SGD':
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
 
             # NaN/Inf guard: skip bad batches instead of corrupting weights
             if any(torch.isnan(p.grad).any() or torch.isinf(p.grad).any()

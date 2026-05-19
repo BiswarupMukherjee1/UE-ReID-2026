@@ -1,0 +1,810 @@
+nohup: no se tendrá en cuenta la entrada
+2026-05-13 23:58:48,986 PAT INFO: Saving model in the path: models/./exp23_exp17_80ep
+2026-05-13 23:58:48,986 PAT INFO: Experiment: exp17_dann_equalized
+2026-05-13 23:58:48,986 PAT INFO: LAMBDA_DANN: 0.3
+2026-05-13 23:58:48,986 PAT INFO: NUM_CAMERAS: 4
+2026-05-13 23:58:48,986 PAT INFO: Namespace(config_file='/media/DiscoLocal/IPCV/UE-ReID/experiments/exp23_exp17_80ep/config/train.yml', opts=[], local_rank=0)
+2026-05-13 23:58:48,986 PAT INFO: Loaded configuration file /media/DiscoLocal/IPCV/UE-ReID/experiments/exp23_exp17_80ep/config/train.yml
+2026-05-13 23:58:48,986 PAT INFO: 
+# =============================================================================
+# exp17 config — DANN + Camera Equalization (NO view embeddings)
+#
+# Changes from exp16:
+#   1. LOG_NAME updated to exp17_dann_equalized
+#
+# Everything else identical to exp16 (which matched exp15 hyperparameters).
+# LAMBDA_DANN=0.3 and NUM_CAMERAS=4 are set as constants in train_exp17.py,
+# not in this config (consistent with how exp15 handled LAMBDA_DANN).
+#
+# Hyperparameters: SGD lr=0.008, 60 epochs, batch=32, NUM_INSTANCE=4
+# Augmentations: CJ ON, RPT ON, REA OFF, LGT OFF
+# PC_LOSS: True
+# =============================================================================
+MODEL:
+  PRETRAIN_CHOICE: 'imagenet'
+  PRETRAIN_PATH: '/media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/model'
+  METRIC_LOSS_TYPE: 'triplet'
+  IF_LABELSMOOTH: 'on'
+  IF_WITH_CENTER: 'no'
+  NAME: 'part_attention_vit'
+  NO_MARGIN: True
+  DEVICE_ID: ('0')
+  TRANSFORMER_TYPE: 'vit_large_patch16_224_TransReID'
+  STRIDE_SIZE: [16, 16]
+  PC_LOSS: True
+INPUT:
+  SIZE_TRAIN: [256, 128]
+  SIZE_TEST: [256, 128]
+  REA:
+    ENABLED: False
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  LGT:
+    DO_LGT: False
+    PROB: 0.5
+  CJ:
+    ENABLED: True
+    PROB: 0.5
+    BRIGHTNESS: 0.15
+    CONTRAST: 0.15
+    SATURATION: 0.1
+    HUE: 0.1
+  RPT:
+    ENABLED: True
+    PROB: 0.5
+DATASETS:
+  TRAIN: ('UrbanElementsReID', 'UAM_Unified')
+  TEST: ('UrbanElementsReID',)
+  ROOT_DIR: '/media/DiscoLocal/IPCV/UE-ReID/urban-elements-re-id-challenge-2026/Urban2026/'
+DATALOADER:
+  SAMPLER: 'softmax_triplet'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+SOLVER:
+  OPTIMIZER_NAME: 'SGD'
+  MAX_EPOCHS: 80
+  BASE_LR: 0.008
+  IMS_PER_BATCH: 32
+  WARMUP_METHOD: 'linear'
+  WARMUP_EPOCHS: 5
+  LARGE_FC_LR: False
+  CHECKPOINT_PERIOD: 5
+  LOG_PERIOD: 60
+  EVAL_PERIOD: 5
+  WEIGHT_DECAY: 1e-4
+  WEIGHT_DECAY_BIAS: 0.0
+  BIAS_LR_FACTOR: 2
+  STEPS: (40, 70)
+  SEED: 1234
+TEST:
+  EVAL: True
+  IMS_PER_BATCH: 64
+  RE_RANKING: False
+  WEIGHT: ''
+  NECK_FEAT: 'before'
+  FEAT_NORM: True
+LOG_ROOT: 'models/'
+TB_LOG_ROOT: './tb_log/'
+LOG_NAME: './exp23_exp17_80ep'
+2026-05-13 23:58:48,987 PAT INFO: Running with config:
+DATALOADER:
+  CAMERA_TO_DOMAIN: False
+  DELETE_REM: False
+  DROP_LAST: False
+  INDIVIDUAL: False
+  NAIVE_WAY: True
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+  SAMPLER: softmax_triplet
+DATASETS:
+  COMBINEALL: False
+  ROOT_DIR: /media/DiscoLocal/IPCV/UE-ReID/urban-elements-re-id-challenge-2026/Urban2026/
+  TEST: ('UrbanElementsReID',)
+  TRAIN: ('UrbanElementsReID', 'UAM_Unified')
+INPUT:
+  CJ:
+    BRIGHTNESS: 0.15
+    CONTRAST: 0.15
+    ENABLED: True
+    HUE: 0.1
+    PROB: 0.5
+    SATURATION: 0.1
+  DO_AUGMIX: False
+  DO_AUTOAUG: False
+  DO_FLIP: True
+  DO_PAD: True
+  FLIP_PROB: 0.5
+  LGT:
+    DO_LGT: False
+    PROB: 0.5
+  PADDING: 10
+  PADDING_MODE: constant
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  REA:
+    ENABLED: False
+    MEAN: [123.675, 116.28, 103.53]
+    PROB: 0.5
+  RPT:
+    ENABLED: True
+    PROB: 0.5
+  SIZE_TEST: [256, 128]
+  SIZE_TRAIN: [256, 128]
+LOG_NAME: ./exp23_exp17_80ep
+LOG_ROOT: models/
+MODEL:
+  ATT_DROP_RATE: 0.0
+  CLUSTER_K: 10
+  COS_LAYER: False
+  DEVICE: cuda
+  DEVICE_ID: 0
+  DIST_TRAIN: False
+  DROP_OUT: 0.0
+  DROP_PATH: 0.1
+  FREEZE_PATCH_EMBED: True
+  ID_LOSS_TYPE: softmax
+  ID_LOSS_WEIGHT: 1.0
+  IF_LABELSMOOTH: on
+  IF_WITH_CENTER: no
+  LAST_STRIDE: 1
+  METRIC_LOSS_TYPE: triplet
+  NAME: part_attention_vit
+  NECK: bnneck
+  NO_MARGIN: True
+  PATCH_EMBED_TYPE: 
+  PC_LOSS: True
+  PC_LR: 1.0
+  PC_SCALE: 0.02
+  PRETRAIN_CHOICE: imagenet
+  PRETRAIN_PATH: /media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/model
+  SOFT_LABEL: True
+  SOFT_LAMBDA: 0.5
+  SOFT_WEIGHT: 0.5
+  STRIDE_SIZE: [16, 16]
+  TRANSFORMER_TYPE: vit_large_patch16_224_TransReID
+  TRIPLET_LOSS_WEIGHT: 1.0
+SOLVER:
+  BASE_LR: 0.008
+  BIAS_LR_FACTOR: 2
+  CENTER_LOSS_WEIGHT: 0.0005
+  CENTER_LR: 0.5
+  CHECKPOINT_PERIOD: 5
+  COSINE_MARGIN: 0.5
+  COSINE_SCALE: 30
+  EVAL_PERIOD: 5
+  GAMMA: 0.1
+  IMS_PER_BATCH: 32
+  LARGE_FC_LR: False
+  LOG_PERIOD: 60
+  MARGIN: 0.3
+  MAX_EPOCHS: 80
+  MOMENTUM: 0.9
+  OPTIMIZER_NAME: SGD
+  SEED: 1234
+  STEPS: (40, 70)
+  WARMUP_EPOCHS: 5
+  WARMUP_FACTOR: 0.01
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0
+TB_LOG_ROOT: ./tb_log/
+TEST:
+  DIST_MAT: dist_mat.npy
+  EVAL: True
+  FEAT_NORM: True
+  IMS_PER_BATCH: 64
+  NECK_FEAT: before
+  RE_RANKING: False
+  WEIGHT: 
+2026-05-13 23:58:49,044 PAT INFO: => Loaded UrbanElementsReID
+2026-05-13 23:58:49,044 PAT INFO:   ----------------------------------------
+2026-05-13 23:58:49,044 PAT INFO:   subset   | # ids | # images | # cameras
+2026-05-13 23:58:49,044 PAT INFO:   ----------------------------------------
+2026-05-13 23:58:49,044 PAT INFO:   train    |  1088 |    11175 |         3
+2026-05-13 23:58:49,044 PAT INFO:   ----------------------------------------
+UAM_Unified (exp16): 8695 images, 691 identities, 1262 c004 images
+2026-05-13 23:58:49,158 PAT INFO: => Loaded UAM_Unified
+2026-05-13 23:58:49,158 PAT INFO:   ----------------------------------------
+2026-05-13 23:58:49,158 PAT INFO:   subset   | # ids | # images | # cameras
+2026-05-13 23:58:49,158 PAT INFO:   ----------------------------------------
+2026-05-13 23:58:49,158 PAT INFO:   train    |   691 |     8695 |         4
+2026-05-13 23:58:49,158 PAT INFO:   ----------------------------------------
+2026-05-13 23:58:49,277 PAT INFO: Dataset: 19,870 images, 1,262 c004 (6.4%)
+2026-05-13 23:58:49,281 PAT INFO: Using CameraEqualizedSampler (guarantees 1 c004 per group for c004-capable identities)
+2026-05-13 23:58:49,281 PAT INFO: Train loader: 561 batches/epoch
+2026-05-13 23:58:49,333 PAT INFO: => Loaded UrbanElementsReID
+2026-05-13 23:58:49,333 PAT INFO:   ----------------------------------------
+2026-05-13 23:58:49,333 PAT INFO:   subset   | # ids | # images | # cameras
+2026-05-13 23:58:49,333 PAT INFO:   ----------------------------------------
+2026-05-13 23:58:49,333 PAT INFO:   query    |  1088 |    11175 |         3
+2026-05-13 23:58:49,333 PAT INFO:   gallery  |  1088 |    11175 |         3
+2026-05-13 23:58:49,333 PAT INFO:   ----------------------------------------
+2026-05-13 23:58:49,334 PAT INFO: num_classes: 1779
+using Transformer_type: part token vit as a backbone
+using stride: [16, 16], and patch number is num_y16 * num_x8
+using drop_out rate is : 0.0
+using attn_drop_out rate is : 0.0
+using drop_path rate is : 0.1
+Resized position embedding from size:torch.Size([1, 197, 1024]) to size: torch.Size([1, 132, 1024]) with height:16 width: 8
+Load 297 / 299 layers.
+Loading pretrained ImageNet model......from /media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/model/jx_vit_large_p16_224-4ee7a4dc.pth
+===========building our part attention vit===========
+2026-05-13 23:58:53,070 PAT.train INFO: Number of parameter: 306.09M
+2026-05-13 23:58:53,070 PAT INFO: Frozen patch_embed for training stability (MoCo v3 trick)
+2026-05-13 23:58:53,353 PAT INFO: Camera classifier: 1024 -> 512 (BN+ReLU) -> 256 (BN+ReLU) -> 4
+using soft triplet loss for training
+label smooth on, numclasses: 1779
+2026-05-13 23:58:53,387 PAT INFO: Added camera_classifier params to optimizer (lr=0.008, wd=0.0001)
+2026-05-13 23:58:53,388 PAT INFO: Using soft label
+2026-05-13 23:58:53,388 PAT.train INFO: start training exp17 DANN (target lambda=0.3)
+saving tblog to ./tb_log/./exp23_exp17_80ep
+initialize the patch centers
+patch center initialization done
+/media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/loss/myloss.py:29: UserWarning: This overload of addmm_ is deprecated:
+	addmm_(Number beta, Number alpha, Tensor mat1, Tensor mat2)
+Consider using one of the following signatures instead:
+	addmm_(Tensor mat1, Tensor mat2, *, Number beta, Number alpha) (Triggered internally at ../torch/csrc/utils/python_arg_parser.cpp:1519.)
+  dist_map.addmm_(1, -2, part_feat, part_centers.t())
+2026-05-14 00:02:30,237 PAT.train INFO: Epoch[1] Iter[60/561] loss:13.229 reid:10.326 pc:1.413 cam:1.490 cam_acc:0.206 ID_acc:0.001 lam:0.0020 lr:1.66e-03
+2026-05-14 00:03:01,478 PAT.train INFO: Epoch[1] Iter[120/561] loss:13.206 reid:10.383 pc:1.373 cam:1.450 cam_acc:0.241 ID_acc:0.000 lam:0.0040 lr:1.66e-03
+2026-05-14 00:03:32,954 PAT.train INFO: Epoch[1] Iter[180/561] loss:13.111 reid:10.328 pc:1.360 cam:1.423 cam_acc:0.260 ID_acc:0.001 lam:0.0060 lr:1.66e-03
+2026-05-14 00:04:04,578 PAT.train INFO: Epoch[1] Iter[240/561] loss:13.025 reid:10.273 pc:1.355 cam:1.397 cam_acc:0.281 ID_acc:0.001 lam:0.0080 lr:1.66e-03
+2026-05-14 00:04:37,101 PAT.train INFO: Epoch[1] Iter[300/561] loss:12.940 reid:10.200 pc:1.359 cam:1.381 cam_acc:0.290 ID_acc:0.001 lam:0.0100 lr:1.66e-03
+2026-05-14 00:05:10,392 PAT.train INFO: Epoch[1] Iter[360/561] loss:12.871 reid:10.135 pc:1.366 cam:1.369 cam_acc:0.295 ID_acc:0.001 lam:0.0120 lr:1.66e-03
+2026-05-14 00:05:43,367 PAT.train INFO: Epoch[1] Iter[420/561] loss:12.815 reid:10.080 pc:1.374 cam:1.361 cam_acc:0.300 ID_acc:0.002 lam:0.0140 lr:1.66e-03
+2026-05-14 00:06:16,536 PAT.train INFO: Epoch[1] Iter[480/561] loss:12.764 reid:10.027 pc:1.382 cam:1.355 cam_acc:0.302 ID_acc:0.003 lam:0.0160 lr:1.66e-03
+2026-05-14 00:06:50,286 PAT.train INFO: Epoch[1] Iter[540/561] loss:12.727 reid:9.989 pc:1.388 cam:1.351 cam_acc:0.304 ID_acc:0.004 lam:0.0180 lr:1.66e-03
+2026-05-14 00:07:01,069 PAT.train INFO: Epoch 1 done. lambda_eff=0.0186 cam_acc=0.303 Time/batch:0.542s Speed:59.0img/s
+2026-05-14 00:07:36,598 PAT.train INFO: Epoch[2] Iter[60/561] loss:11.697 reid:9.100 pc:1.336 cam:1.260 cam_acc:0.348 ID_acc:0.020 lam:0.0207 lr:3.25e-03
+2026-05-14 00:08:10,487 PAT.train INFO: Epoch[2] Iter[120/561] loss:11.594 reid:9.041 pc:1.289 cam:1.264 cam_acc:0.343 ID_acc:0.023 lam:0.0227 lr:3.25e-03
+2026-05-14 00:08:45,567 PAT.train INFO: Epoch[2] Iter[180/561] loss:11.439 reid:8.998 pc:1.179 cam:1.262 cam_acc:0.348 ID_acc:0.026 lam:0.0247 lr:3.25e-03
+2026-05-14 00:09:22,497 PAT.train INFO: Epoch[2] Iter[240/561] loss:11.323 reid:8.976 pc:1.092 cam:1.255 cam_acc:0.352 ID_acc:0.028 lam:0.0267 lr:3.25e-03
+2026-05-14 00:09:56,809 PAT.train INFO: Epoch[2] Iter[300/561] loss:11.219 reid:8.941 pc:1.024 cam:1.254 cam_acc:0.352 ID_acc:0.029 lam:0.0287 lr:3.25e-03
+2026-05-14 00:10:31,061 PAT.train INFO: Epoch[2] Iter[360/561] loss:11.152 reid:8.911 pc:0.986 cam:1.254 cam_acc:0.352 ID_acc:0.032 lam:0.0306 lr:3.25e-03
+2026-05-14 00:11:04,844 PAT.train INFO: Epoch[2] Iter[420/561] loss:11.110 reid:8.901 pc:0.956 cam:1.252 cam_acc:0.354 ID_acc:0.038 lam:0.0326 lr:3.25e-03
+2026-05-14 00:11:38,636 PAT.train INFO: Epoch[2] Iter[480/561] loss:11.070 reid:8.888 pc:0.931 cam:1.251 cam_acc:0.358 ID_acc:0.043 lam:0.0346 lr:3.25e-03
+2026-05-14 00:12:12,519 PAT.train INFO: Epoch[2] Iter[540/561] loss:11.021 reid:8.870 pc:0.898 cam:1.252 cam_acc:0.358 ID_acc:0.052 lam:0.0366 lr:3.25e-03
+2026-05-14 00:12:22,856 PAT.train INFO: Epoch 2 done. lambda_eff=0.0372 cam_acc=0.358 Time/batch:0.577s Speed:55.5img/s
+2026-05-14 00:12:57,468 PAT.train INFO: Epoch[3] Iter[60/561] loss:10.192 reid:8.379 pc:0.617 cam:1.197 cam_acc:0.421 ID_acc:0.068 lam:0.0392 lr:4.83e-03
+2026-05-14 00:13:31,496 PAT.train INFO: Epoch[3] Iter[120/561] loss:10.231 reid:8.434 pc:0.599 cam:1.198 cam_acc:0.413 ID_acc:0.066 lam:0.0412 lr:4.83e-03
+2026-05-14 00:14:05,443 PAT.train INFO: Epoch[3] Iter[180/561] loss:10.251 reid:8.452 pc:0.599 cam:1.200 cam_acc:0.411 ID_acc:0.073 lam:0.0432 lr:4.83e-03
+2026-05-14 00:14:39,402 PAT.train INFO: Epoch[3] Iter[240/561] loss:10.221 reid:8.426 pc:0.600 cam:1.194 cam_acc:0.416 ID_acc:0.077 lam:0.0451 lr:4.83e-03
+2026-05-14 00:15:13,302 PAT.train INFO: Epoch[3] Iter[300/561] loss:10.175 reid:8.423 pc:0.556 cam:1.196 cam_acc:0.417 ID_acc:0.075 lam:0.0471 lr:4.83e-03
+2026-05-14 00:15:46,469 PAT.train INFO: Epoch[3] Iter[360/561] loss:10.112 reid:8.420 pc:0.500 cam:1.192 cam_acc:0.422 ID_acc:0.076 lam:0.0491 lr:4.83e-03
+2026-05-14 00:16:19,510 PAT.train INFO: Epoch[3] Iter[420/561] loss:10.044 reid:8.406 pc:0.452 cam:1.187 cam_acc:0.427 ID_acc:0.079 lam:0.0510 lr:4.83e-03
+2026-05-14 00:16:52,641 PAT.train INFO: Epoch[3] Iter[480/561] loss:9.966 reid:8.379 pc:0.401 cam:1.186 cam_acc:0.426 ID_acc:0.081 lam:0.0529 lr:4.83e-03
+2026-05-14 00:17:25,987 PAT.train INFO: Epoch[3] Iter[540/561] loss:9.897 reid:8.347 pc:0.364 cam:1.186 cam_acc:0.425 ID_acc:0.092 lam:0.0549 lr:4.83e-03
+2026-05-14 00:17:36,117 PAT.train INFO: Epoch 3 done. lambda_eff=0.0555 cam_acc=0.423 Time/batch:0.561s Speed:57.0img/s
+2026-05-14 00:18:10,325 PAT.train INFO: Epoch[4] Iter[60/561] loss:9.408 reid:8.104 pc:0.188 cam:1.116 cam_acc:0.493 ID_acc:0.053 lam:0.0575 lr:6.42e-03
+2026-05-14 00:18:43,541 PAT.train INFO: Epoch[4] Iter[120/561] loss:9.401 reid:8.068 pc:0.224 cam:1.110 cam_acc:0.483 ID_acc:0.061 lam:0.0594 lr:6.42e-03
+2026-05-14 00:19:16,763 PAT.train INFO: Epoch[4] Iter[180/561] loss:9.352 reid:8.047 pc:0.195 cam:1.110 cam_acc:0.484 ID_acc:0.065 lam:0.0614 lr:6.42e-03
+2026-05-14 00:19:49,883 PAT.train INFO: Epoch[4] Iter[240/561] loss:9.266 reid:8.003 pc:0.154 cam:1.108 cam_acc:0.488 ID_acc:0.073 lam:0.0633 lr:6.42e-03
+2026-05-14 00:20:22,970 PAT.train INFO: Epoch[4] Iter[300/561] loss:9.215 reid:7.977 pc:0.129 cam:1.109 cam_acc:0.490 ID_acc:0.079 lam:0.0652 lr:6.42e-03
+2026-05-14 00:20:56,083 PAT.train INFO: Epoch[4] Iter[360/561] loss:9.157 reid:7.936 pc:0.113 cam:1.107 cam_acc:0.492 ID_acc:0.085 lam:0.0671 lr:6.42e-03
+2026-05-14 00:21:29,097 PAT.train INFO: Epoch[4] Iter[420/561] loss:9.124 reid:7.912 pc:0.104 cam:1.107 cam_acc:0.494 ID_acc:0.085 lam:0.0690 lr:6.42e-03
+2026-05-14 00:22:02,053 PAT.train INFO: Epoch[4] Iter[480/561] loss:9.064 reid:7.859 pc:0.096 cam:1.108 cam_acc:0.495 ID_acc:0.087 lam:0.0709 lr:6.42e-03
+2026-05-14 00:22:35,142 PAT.train INFO: Epoch[4] Iter[540/561] loss:8.978 reid:7.778 pc:0.089 cam:1.110 cam_acc:0.495 ID_acc:0.100 lam:0.0728 lr:6.42e-03
+2026-05-14 00:22:44,675 PAT.train INFO: Epoch 4 done. lambda_eff=0.0733 cam_acc=0.494 Time/batch:0.554s Speed:57.8img/s
+2026-05-14 00:23:18,436 PAT.train INFO: Epoch[5] Iter[60/561] loss:8.489 reid:7.411 pc:0.038 cam:1.040 cam_acc:0.539 ID_acc:0.053 lam:0.0753 lr:7.97e-03
+2026-05-14 00:23:51,554 PAT.train INFO: Epoch[5] Iter[120/561] loss:8.519 reid:7.427 pc:0.039 cam:1.054 cam_acc:0.524 ID_acc:0.059 lam:0.0772 lr:7.97e-03
+2026-05-14 00:24:24,612 PAT.train INFO: Epoch[5] Iter[180/561] loss:8.492 reid:7.410 pc:0.038 cam:1.044 cam_acc:0.525 ID_acc:0.062 lam:0.0791 lr:7.97e-03
+2026-05-14 00:24:58,354 PAT.train INFO: Epoch[5] Iter[240/561] loss:8.443 reid:7.368 pc:0.037 cam:1.038 cam_acc:0.531 ID_acc:0.063 lam:0.0809 lr:7.97e-03
+2026-05-14 00:25:31,545 PAT.train INFO: Epoch[5] Iter[300/561] loss:8.402 reid:7.329 pc:0.036 cam:1.037 cam_acc:0.532 ID_acc:0.068 lam:0.0828 lr:7.97e-03
+2026-05-14 00:26:04,518 PAT.train INFO: Epoch[5] Iter[360/561] loss:8.345 reid:7.275 pc:0.035 cam:1.035 cam_acc:0.534 ID_acc:0.075 lam:0.0846 lr:7.97e-03
+2026-05-14 00:26:37,475 PAT.train INFO: Epoch[5] Iter[420/561] loss:8.272 reid:7.209 pc:0.034 cam:1.029 cam_acc:0.538 ID_acc:0.082 lam:0.0865 lr:7.97e-03
+2026-05-14 00:27:10,560 PAT.train INFO: Epoch[5] Iter[480/561] loss:8.188 reid:7.128 pc:0.033 cam:1.026 cam_acc:0.541 ID_acc:0.091 lam:0.0883 lr:7.97e-03
+2026-05-14 00:27:43,911 PAT.train INFO: Epoch[5] Iter[540/561] loss:8.076 reid:7.018 pc:0.032 cam:1.026 cam_acc:0.542 ID_acc:0.105 lam:0.0901 lr:7.97e-03
+2026-05-14 00:27:54,087 PAT.train INFO: Epoch 5 done. lambda_eff=0.0907 cam_acc=0.542 Time/batch:0.554s Speed:57.7img/s
+2026-05-14 00:27:54,088 PAT.test INFO: Enter inferencing
+2026-05-14 00:31:08,936 PAT.test INFO: Validation Results
+2026-05-14 00:31:08,936 PAT.test INFO: mAP: 35.8%
+2026-05-14 00:31:08,936 PAT.test INFO: CMC curve, Rank-1  :57.3%
+2026-05-14 00:31:08,936 PAT.test INFO: CMC curve, Rank-5  :78.2%
+2026-05-14 00:31:08,936 PAT.test INFO: CMC curve, Rank-10 :85.4%
+2026-05-14 00:31:08,936 PAT.test INFO: total inference time: 194.84
+2026-05-14 00:31:08,942 PAT.train INFO: =====saving epoch: 5=====
+2026-05-14 00:31:41,739 PAT.train INFO: Epoch[6] Iter[60/561] loss:7.898 reid:6.897 pc:0.042 cam:0.959 cam_acc:0.589 ID_acc:0.067 lam:0.0926 lr:7.95e-03
+2026-05-14 00:32:12,339 PAT.train INFO: Epoch[6] Iter[120/561] loss:7.901 reid:6.887 pc:0.047 cam:0.968 cam_acc:0.579 ID_acc:0.069 lam:0.0944 lr:7.95e-03
+2026-05-14 00:32:43,028 PAT.train INFO: Epoch[6] Iter[180/561] loss:7.848 reid:6.832 pc:0.051 cam:0.965 cam_acc:0.582 ID_acc:0.077 lam:0.0962 lr:7.95e-03
+2026-05-14 00:33:13,800 PAT.train INFO: Epoch[6] Iter[240/561] loss:7.836 reid:6.817 pc:0.054 cam:0.966 cam_acc:0.580 ID_acc:0.084 lam:0.0980 lr:7.95e-03
+2026-05-14 00:33:44,450 PAT.train INFO: Epoch[6] Iter[300/561] loss:7.737 reid:6.719 pc:0.055 cam:0.963 cam_acc:0.584 ID_acc:0.095 lam:0.0998 lr:7.95e-03
+2026-05-14 00:34:15,693 PAT.train INFO: Epoch[6] Iter[360/561] loss:7.647 reid:6.636 pc:0.055 cam:0.955 cam_acc:0.588 ID_acc:0.100 lam:0.1016 lr:7.95e-03
+2026-05-14 00:34:46,623 PAT.train INFO: Epoch[6] Iter[420/561] loss:7.549 reid:6.544 pc:0.055 cam:0.951 cam_acc:0.592 ID_acc:0.110 lam:0.1033 lr:7.95e-03
+2026-05-14 00:35:19,236 PAT.train INFO: Epoch[6] Iter[480/561] loss:7.461 reid:6.456 pc:0.053 cam:0.952 cam_acc:0.589 ID_acc:0.122 lam:0.1051 lr:7.95e-03
+2026-05-14 00:35:51,316 PAT.train INFO: Epoch[6] Iter[540/561] loss:7.344 reid:6.342 pc:0.051 cam:0.951 cam_acc:0.589 ID_acc:0.144 lam:0.1069 lr:7.95e-03
+2026-05-14 00:36:01,853 PAT.train INFO: Epoch 6 done. lambda_eff=0.1074 cam_acc=0.589 Time/batch:0.522s Speed:61.3img/s
+2026-05-14 00:36:33,964 PAT.train INFO: Epoch[7] Iter[60/561] loss:7.364 reid:6.389 pc:0.040 cam:0.935 cam_acc:0.602 ID_acc:0.077 lam:0.1092 lr:7.93e-03
+2026-05-14 00:37:04,536 PAT.train INFO: Epoch[7] Iter[120/561] loss:7.320 reid:6.350 pc:0.047 cam:0.923 cam_acc:0.606 ID_acc:0.093 lam:0.1110 lr:7.93e-03
+2026-05-14 00:37:36,774 PAT.train INFO: Epoch[7] Iter[180/561] loss:7.263 reid:6.299 pc:0.051 cam:0.914 cam_acc:0.610 ID_acc:0.105 lam:0.1127 lr:7.93e-03
+2026-05-14 00:38:08,178 PAT.train INFO: Epoch[7] Iter[240/561] loss:7.208 reid:6.247 pc:0.053 cam:0.909 cam_acc:0.613 ID_acc:0.112 lam:0.1144 lr:7.93e-03
+2026-05-14 00:38:38,751 PAT.train INFO: Epoch[7] Iter[300/561] loss:7.118 reid:6.160 pc:0.054 cam:0.905 cam_acc:0.616 ID_acc:0.127 lam:0.1161 lr:7.93e-03
+2026-05-14 00:39:09,414 PAT.train INFO: Epoch[7] Iter[360/561] loss:7.064 reid:6.108 pc:0.055 cam:0.901 cam_acc:0.618 ID_acc:0.136 lam:0.1178 lr:7.93e-03
+2026-05-14 00:39:40,051 PAT.train INFO: Epoch[7] Iter[420/561] loss:6.994 reid:6.039 pc:0.055 cam:0.901 cam_acc:0.619 ID_acc:0.150 lam:0.1195 lr:7.93e-03
+2026-05-14 00:40:10,750 PAT.train INFO: Epoch[7] Iter[480/561] loss:6.898 reid:5.943 pc:0.051 cam:0.903 cam_acc:0.617 ID_acc:0.165 lam:0.1212 lr:7.93e-03
+2026-05-14 00:40:41,446 PAT.train INFO: Epoch[7] Iter[540/561] loss:6.765 reid:5.816 pc:0.046 cam:0.903 cam_acc:0.616 ID_acc:0.191 lam:0.1229 lr:7.93e-03
+2026-05-14 00:40:50,760 PAT.train INFO: Epoch 7 done. lambda_eff=0.1234 cam_acc=0.617 Time/batch:0.518s Speed:61.8img/s
+2026-05-14 00:41:22,189 PAT.train INFO: Epoch[8] Iter[60/561] loss:6.818 reid:5.933 pc:0.010 cam:0.876 cam_acc:0.628 ID_acc:0.153 lam:0.1251 lr:7.91e-03
+2026-05-14 00:41:52,969 PAT.train INFO: Epoch[8] Iter[120/561] loss:6.805 reid:5.919 pc:0.012 cam:0.873 cam_acc:0.627 ID_acc:0.146 lam:0.1268 lr:7.91e-03
+2026-05-14 00:42:23,611 PAT.train INFO: Epoch[8] Iter[180/561] loss:6.799 reid:5.911 pc:0.014 cam:0.874 cam_acc:0.625 ID_acc:0.151 lam:0.1284 lr:7.91e-03
+2026-05-14 00:42:54,251 PAT.train INFO: Epoch[8] Iter[240/561] loss:6.721 reid:5.842 pc:0.013 cam:0.866 cam_acc:0.632 ID_acc:0.163 lam:0.1300 lr:7.91e-03
+2026-05-14 00:43:25,102 PAT.train INFO: Epoch[8] Iter[300/561] loss:6.673 reid:5.790 pc:0.012 cam:0.871 cam_acc:0.630 ID_acc:0.175 lam:0.1317 lr:7.91e-03
+2026-05-14 00:43:55,775 PAT.train INFO: Epoch[8] Iter[360/561] loss:6.586 reid:5.711 pc:0.011 cam:0.864 cam_acc:0.633 ID_acc:0.187 lam:0.1333 lr:7.91e-03
+2026-05-14 00:44:26,489 PAT.train INFO: Epoch[8] Iter[420/561] loss:6.495 reid:5.625 pc:0.010 cam:0.861 cam_acc:0.634 ID_acc:0.201 lam:0.1349 lr:7.91e-03
+2026-05-14 00:44:57,289 PAT.train INFO: Epoch[8] Iter[480/561] loss:6.403 reid:5.530 pc:0.009 cam:0.864 cam_acc:0.632 ID_acc:0.220 lam:0.1365 lr:7.91e-03
+2026-05-14 00:45:28,038 PAT.train INFO: Epoch[8] Iter[540/561] loss:6.276 reid:5.408 pc:0.008 cam:0.860 cam_acc:0.636 ID_acc:0.241 lam:0.1381 lr:7.91e-03
+2026-05-14 00:45:37,364 PAT.train INFO: Epoch 8 done. lambda_eff=0.1385 cam_acc=0.635 Time/batch:0.513s Speed:62.3img/s
+2026-05-14 00:46:08,919 PAT.train INFO: Epoch[9] Iter[60/561] loss:6.497 reid:5.673 pc:0.004 cam:0.820 cam_acc:0.652 ID_acc:0.161 lam:0.1402 lr:7.89e-03
+2026-05-14 00:46:39,668 PAT.train INFO: Epoch[9] Iter[120/561] loss:6.446 reid:5.623 pc:0.005 cam:0.817 cam_acc:0.651 ID_acc:0.178 lam:0.1417 lr:7.89e-03
+2026-05-14 00:47:10,360 PAT.train INFO: Epoch[9] Iter[180/561] loss:6.353 reid:5.529 pc:0.005 cam:0.819 cam_acc:0.653 ID_acc:0.194 lam:0.1433 lr:7.89e-03
+2026-05-14 00:47:41,009 PAT.train INFO: Epoch[9] Iter[240/561] loss:6.313 reid:5.487 pc:0.005 cam:0.821 cam_acc:0.652 ID_acc:0.202 lam:0.1448 lr:7.89e-03
+2026-05-14 00:48:11,679 PAT.train INFO: Epoch[9] Iter[300/561] loss:6.242 reid:5.411 pc:0.005 cam:0.826 cam_acc:0.648 ID_acc:0.217 lam:0.1464 lr:7.89e-03
+2026-05-14 00:48:42,511 PAT.train INFO: Epoch[9] Iter[360/561] loss:6.163 reid:5.329 pc:0.005 cam:0.829 cam_acc:0.646 ID_acc:0.232 lam:0.1479 lr:7.89e-03
+2026-05-14 00:49:13,281 PAT.train INFO: Epoch[9] Iter[420/561] loss:6.081 reid:5.245 pc:0.004 cam:0.832 cam_acc:0.644 ID_acc:0.247 lam:0.1494 lr:7.89e-03
+2026-05-14 00:49:44,069 PAT.train INFO: Epoch[9] Iter[480/561] loss:6.000 reid:5.167 pc:0.004 cam:0.830 cam_acc:0.647 ID_acc:0.264 lam:0.1509 lr:7.89e-03
+2026-05-14 00:50:14,956 PAT.train INFO: Epoch[9] Iter[540/561] loss:5.866 reid:5.037 pc:0.004 cam:0.825 cam_acc:0.651 ID_acc:0.290 lam:0.1524 lr:7.89e-03
+2026-05-14 00:50:24,273 PAT.train INFO: Epoch 9 done. lambda_eff=0.1529 cam_acc=0.650 Time/batch:0.514s Speed:62.3img/s
+2026-05-14 00:50:55,719 PAT.train INFO: Epoch[10] Iter[60/561] loss:6.129 reid:5.305 pc:0.006 cam:0.818 cam_acc:0.655 ID_acc:0.209 lam:0.1544 lr:7.87e-03
+2026-05-14 00:51:26,378 PAT.train INFO: Epoch[10] Iter[120/561] loss:6.127 reid:5.313 pc:0.007 cam:0.807 cam_acc:0.665 ID_acc:0.215 lam:0.1559 lr:7.87e-03
+2026-05-14 00:51:57,043 PAT.train INFO: Epoch[10] Iter[180/561] loss:6.086 reid:5.267 pc:0.007 cam:0.812 cam_acc:0.660 ID_acc:0.232 lam:0.1573 lr:7.87e-03
+2026-05-14 00:52:27,698 PAT.train INFO: Epoch[10] Iter[240/561] loss:6.018 reid:5.208 pc:0.006 cam:0.803 cam_acc:0.663 ID_acc:0.245 lam:0.1588 lr:7.87e-03
+2026-05-14 00:52:58,373 PAT.train INFO: Epoch[10] Iter[300/561] loss:5.929 reid:5.124 pc:0.006 cam:0.800 cam_acc:0.667 ID_acc:0.261 lam:0.1602 lr:7.87e-03
+2026-05-14 00:53:29,037 PAT.train INFO: Epoch[10] Iter[360/561] loss:5.857 reid:5.047 pc:0.006 cam:0.805 cam_acc:0.665 ID_acc:0.277 lam:0.1616 lr:7.87e-03
+2026-05-14 00:53:59,795 PAT.train INFO: Epoch[10] Iter[420/561] loss:5.782 reid:4.965 pc:0.006 cam:0.811 cam_acc:0.663 ID_acc:0.295 lam:0.1631 lr:7.87e-03
+2026-05-14 00:54:30,524 PAT.train INFO: Epoch[10] Iter[480/561] loss:5.705 reid:4.890 pc:0.006 cam:0.810 cam_acc:0.665 ID_acc:0.312 lam:0.1645 lr:7.87e-03
+2026-05-14 00:55:01,258 PAT.train INFO: Epoch[10] Iter[540/561] loss:5.581 reid:4.764 pc:0.006 cam:0.812 cam_acc:0.664 ID_acc:0.340 lam:0.1659 lr:7.87e-03
+2026-05-14 00:55:10,081 PAT.train INFO: Epoch 10 done. lambda_eff=0.1663 cam_acc=0.664 Time/batch:0.513s Speed:62.4img/s
+2026-05-14 00:55:10,081 PAT.test INFO: Enter inferencing
+2026-05-14 00:58:24,819 PAT.test INFO: Validation Results
+2026-05-14 00:58:24,819 PAT.test INFO: mAP: 42.6%
+2026-05-14 00:58:24,819 PAT.test INFO: CMC curve, Rank-1  :62.6%
+2026-05-14 00:58:24,819 PAT.test INFO: CMC curve, Rank-5  :81.9%
+2026-05-14 00:58:24,819 PAT.test INFO: CMC curve, Rank-10 :88.6%
+2026-05-14 00:58:24,819 PAT.test INFO: total inference time: 194.73
+2026-05-14 00:58:24,821 PAT.train INFO: =====saving epoch: 10=====
+2026-05-14 00:58:59,721 PAT.train INFO: Epoch[11] Iter[60/561] loss:5.867 reid:5.020 pc:0.012 cam:0.835 cam_acc:0.645 ID_acc:0.256 lam:0.1677 lr:7.84e-03
+2026-05-14 00:59:32,930 PAT.train INFO: Epoch[11] Iter[120/561] loss:5.799 reid:4.967 pc:0.015 cam:0.816 cam_acc:0.657 ID_acc:0.270 lam:0.1691 lr:7.84e-03
+2026-05-14 01:00:06,057 PAT.train INFO: Epoch[11] Iter[180/561] loss:5.774 reid:4.932 pc:0.024 cam:0.819 cam_acc:0.653 ID_acc:0.285 lam:0.1705 lr:7.84e-03
+2026-05-14 01:00:39,189 PAT.train INFO: Epoch[11] Iter[240/561] loss:5.725 reid:4.880 pc:0.028 cam:0.817 cam_acc:0.653 ID_acc:0.294 lam:0.1718 lr:7.84e-03
+2026-05-14 01:01:12,422 PAT.train INFO: Epoch[11] Iter[300/561] loss:5.660 reid:4.812 pc:0.032 cam:0.816 cam_acc:0.655 ID_acc:0.308 lam:0.1732 lr:7.84e-03
+2026-05-14 01:01:45,584 PAT.train INFO: Epoch[11] Iter[360/561] loss:5.584 reid:4.733 pc:0.042 cam:0.810 cam_acc:0.660 ID_acc:0.325 lam:0.1745 lr:7.84e-03
+2026-05-14 01:02:18,767 PAT.train INFO: Epoch[11] Iter[420/561] loss:5.496 reid:4.644 pc:0.044 cam:0.808 cam_acc:0.658 ID_acc:0.341 lam:0.1758 lr:7.84e-03
+2026-05-14 01:02:51,948 PAT.train INFO: Epoch[11] Iter[480/561] loss:5.408 reid:4.560 pc:0.041 cam:0.807 cam_acc:0.660 ID_acc:0.356 lam:0.1771 lr:7.84e-03
+2026-05-14 01:03:25,374 PAT.train INFO: Epoch[11] Iter[540/561] loss:5.310 reid:4.463 pc:0.040 cam:0.807 cam_acc:0.661 ID_acc:0.381 lam:0.1784 lr:7.84e-03
+2026-05-14 01:03:34,262 PAT.train INFO: Epoch 11 done. lambda_eff=0.1788 cam_acc=0.661 Time/batch:0.554s Speed:57.7img/s
+2026-05-14 01:04:08,234 PAT.train INFO: Epoch[12] Iter[60/561] loss:5.542 reid:4.714 pc:0.002 cam:0.826 cam_acc:0.651 ID_acc:0.295 lam:0.1802 lr:7.81e-03
+2026-05-14 01:04:41,525 PAT.train INFO: Epoch[12] Iter[120/561] loss:5.553 reid:4.725 pc:0.003 cam:0.826 cam_acc:0.650 ID_acc:0.299 lam:0.1815 lr:7.81e-03
+2026-05-14 01:05:14,783 PAT.train INFO: Epoch[12] Iter[180/561] loss:5.521 reid:4.689 pc:0.004 cam:0.828 cam_acc:0.651 ID_acc:0.313 lam:0.1827 lr:7.81e-03
+2026-05-14 01:05:48,381 PAT.train INFO: Epoch[12] Iter[240/561] loss:5.458 reid:4.624 pc:0.006 cam:0.827 cam_acc:0.650 ID_acc:0.331 lam:0.1840 lr:7.81e-03
+2026-05-14 01:06:21,729 PAT.train INFO: Epoch[12] Iter[300/561] loss:5.378 reid:4.537 pc:0.008 cam:0.833 cam_acc:0.647 ID_acc:0.351 lam:0.1852 lr:7.81e-03
+2026-05-14 01:06:54,960 PAT.train INFO: Epoch[12] Iter[360/561] loss:5.329 reid:4.487 pc:0.009 cam:0.833 cam_acc:0.647 ID_acc:0.367 lam:0.1865 lr:7.81e-03
+2026-05-14 01:07:28,218 PAT.train INFO: Epoch[12] Iter[420/561] loss:5.252 reid:4.413 pc:0.008 cam:0.831 cam_acc:0.648 ID_acc:0.388 lam:0.1877 lr:7.81e-03
+2026-05-14 01:08:01,429 PAT.train INFO: Epoch[12] Iter[480/561] loss:5.181 reid:4.344 pc:0.007 cam:0.829 cam_acc:0.649 ID_acc:0.401 lam:0.1889 lr:7.81e-03
+2026-05-14 01:08:34,550 PAT.train INFO: Epoch[12] Iter[540/561] loss:5.073 reid:4.234 pc:0.007 cam:0.832 cam_acc:0.648 ID_acc:0.426 lam:0.1901 lr:7.81e-03
+2026-05-14 01:08:44,568 PAT.train INFO: Epoch 12 done. lambda_eff=0.1905 cam_acc=0.648 Time/batch:0.556s Speed:57.6img/s
+2026-05-14 01:09:18,446 PAT.train INFO: Epoch[13] Iter[60/561] loss:5.540 reid:4.701 pc:0.003 cam:0.836 cam_acc:0.644 ID_acc:0.306 lam:0.1917 lr:7.78e-03
+2026-05-14 01:09:51,764 PAT.train INFO: Epoch[13] Iter[120/561] loss:5.405 reid:4.565 pc:0.006 cam:0.834 cam_acc:0.651 ID_acc:0.331 lam:0.1929 lr:7.78e-03
+2026-05-14 01:10:25,071 PAT.train INFO: Epoch[13] Iter[180/561] loss:5.363 reid:4.528 pc:0.007 cam:0.828 cam_acc:0.652 ID_acc:0.338 lam:0.1941 lr:7.78e-03
+2026-05-14 01:10:58,329 PAT.train INFO: Epoch[13] Iter[240/561] loss:5.280 reid:4.449 pc:0.012 cam:0.819 cam_acc:0.657 ID_acc:0.361 lam:0.1952 lr:7.78e-03
+2026-05-14 01:11:31,539 PAT.train INFO: Epoch[13] Iter[300/561] loss:5.211 reid:4.379 pc:0.013 cam:0.820 cam_acc:0.657 ID_acc:0.379 lam:0.1964 lr:7.78e-03
+2026-05-14 01:12:04,717 PAT.train INFO: Epoch[13] Iter[360/561] loss:5.131 reid:4.298 pc:0.015 cam:0.817 cam_acc:0.657 ID_acc:0.395 lam:0.1975 lr:7.78e-03
+2026-05-14 01:12:37,969 PAT.train INFO: Epoch[13] Iter[420/561] loss:5.061 reid:4.224 pc:0.015 cam:0.821 cam_acc:0.654 ID_acc:0.415 lam:0.1987 lr:7.78e-03
+2026-05-14 01:13:11,141 PAT.train INFO: Epoch[13] Iter[480/561] loss:4.975 reid:4.136 pc:0.015 cam:0.824 cam_acc:0.653 ID_acc:0.437 lam:0.1998 lr:7.78e-03
+2026-05-14 01:13:44,292 PAT.train INFO: Epoch[13] Iter[540/561] loss:4.860 reid:4.022 pc:0.014 cam:0.823 cam_acc:0.655 ID_acc:0.464 lam:0.2009 lr:7.78e-03
+2026-05-14 01:13:54,873 PAT.train INFO: Epoch 13 done. lambda_eff=0.2012 cam_acc=0.657 Time/batch:0.555s Speed:57.7img/s
+2026-05-14 01:14:28,909 PAT.train INFO: Epoch[14] Iter[60/561] loss:5.276 reid:4.429 pc:0.004 cam:0.844 cam_acc:0.634 ID_acc:0.343 lam:0.2024 lr:7.74e-03
+2026-05-14 01:15:02,275 PAT.train INFO: Epoch[14] Iter[120/561] loss:5.252 reid:4.383 pc:0.016 cam:0.853 cam_acc:0.632 ID_acc:0.359 lam:0.2035 lr:7.74e-03
+2026-05-14 01:15:35,634 PAT.train INFO: Epoch[14] Iter[180/561] loss:5.203 reid:4.308 pc:0.031 cam:0.864 cam_acc:0.627 ID_acc:0.384 lam:0.2045 lr:7.74e-03
+2026-05-14 01:16:08,947 PAT.train INFO: Epoch[14] Iter[240/561] loss:5.136 reid:4.244 pc:0.038 cam:0.854 cam_acc:0.635 ID_acc:0.406 lam:0.2056 lr:7.74e-03
+2026-05-14 01:16:42,337 PAT.train INFO: Epoch[14] Iter[300/561] loss:5.062 reid:4.172 pc:0.037 cam:0.852 cam_acc:0.637 ID_acc:0.421 lam:0.2067 lr:7.74e-03
+2026-05-14 01:17:15,623 PAT.train INFO: Epoch[14] Iter[360/561] loss:4.998 reid:4.107 pc:0.036 cam:0.855 cam_acc:0.635 ID_acc:0.439 lam:0.2077 lr:7.74e-03
+2026-05-14 01:17:48,941 PAT.train INFO: Epoch[14] Iter[420/561] loss:4.925 reid:4.040 pc:0.034 cam:0.851 cam_acc:0.637 ID_acc:0.458 lam:0.2088 lr:7.74e-03
+2026-05-14 01:18:22,284 PAT.train INFO: Epoch[14] Iter[480/561] loss:4.862 reid:3.979 pc:0.030 cam:0.853 cam_acc:0.637 ID_acc:0.475 lam:0.2098 lr:7.74e-03
+2026-05-14 01:18:55,536 PAT.train INFO: Epoch[14] Iter[540/561] loss:4.754 reid:3.878 pc:0.028 cam:0.848 cam_acc:0.639 ID_acc:0.499 lam:0.2108 lr:7.74e-03
+2026-05-14 01:19:05,601 PAT.train INFO: Epoch 14 done. lambda_eff=0.2111 cam_acc=0.641 Time/batch:0.557s Speed:57.5img/s
+2026-05-14 01:19:39,665 PAT.train INFO: Epoch[15] Iter[60/561] loss:5.130 reid:4.274 pc:0.005 cam:0.850 cam_acc:0.644 ID_acc:0.369 lam:0.2122 lr:7.70e-03
+2026-05-14 01:20:13,009 PAT.train INFO: Epoch[15] Iter[120/561] loss:5.063 reid:4.203 pc:0.004 cam:0.856 cam_acc:0.634 ID_acc:0.380 lam:0.2132 lr:7.70e-03
+2026-05-14 01:20:46,351 PAT.train INFO: Epoch[15] Iter[180/561] loss:5.034 reid:4.176 pc:0.005 cam:0.853 cam_acc:0.636 ID_acc:0.400 lam:0.2141 lr:7.70e-03
+2026-05-14 01:21:19,752 PAT.train INFO: Epoch[15] Iter[240/561] loss:4.978 reid:4.119 pc:0.005 cam:0.854 cam_acc:0.636 ID_acc:0.422 lam:0.2151 lr:7.70e-03
+2026-05-14 01:21:53,165 PAT.train INFO: Epoch[15] Iter[300/561] loss:4.878 reid:4.026 pc:0.005 cam:0.847 cam_acc:0.635 ID_acc:0.444 lam:0.2161 lr:7.70e-03
+2026-05-14 01:22:26,483 PAT.train INFO: Epoch[15] Iter[360/561] loss:4.814 reid:3.962 pc:0.005 cam:0.847 cam_acc:0.636 ID_acc:0.462 lam:0.2171 lr:7.70e-03
+2026-05-14 01:22:59,844 PAT.train INFO: Epoch[15] Iter[420/561] loss:4.722 reid:3.876 pc:0.005 cam:0.841 cam_acc:0.641 ID_acc:0.481 lam:0.2180 lr:7.70e-03
+2026-05-14 01:23:33,180 PAT.train INFO: Epoch[15] Iter[480/561] loss:4.638 reid:3.795 pc:0.005 cam:0.838 cam_acc:0.642 ID_acc:0.500 lam:0.2189 lr:7.70e-03
+2026-05-14 01:24:06,535 PAT.train INFO: Epoch[15] Iter[540/561] loss:4.529 reid:3.692 pc:0.005 cam:0.832 cam_acc:0.646 ID_acc:0.525 lam:0.2199 lr:7.70e-03
+2026-05-14 01:24:17,177 PAT.train INFO: Epoch 15 done. lambda_eff=0.2202 cam_acc=0.649 Time/batch:0.557s Speed:57.4img/s
+2026-05-14 01:24:17,178 PAT.test INFO: Enter inferencing
+2026-05-14 01:27:31,714 PAT.test INFO: Validation Results
+2026-05-14 01:27:31,714 PAT.test INFO: mAP: 48.4%
+2026-05-14 01:27:31,715 PAT.test INFO: CMC curve, Rank-1  :66.6%
+2026-05-14 01:27:31,715 PAT.test INFO: CMC curve, Rank-5  :85.4%
+2026-05-14 01:27:31,715 PAT.test INFO: CMC curve, Rank-10 :91.1%
+2026-05-14 01:27:31,715 PAT.test INFO: total inference time: 194.53
+2026-05-14 01:27:31,721 PAT.train INFO: =====saving epoch: 15=====
+2026-05-14 01:28:06,559 PAT.train INFO: Epoch[16] Iter[60/561] loss:4.806 reid:3.991 pc:0.003 cam:0.812 cam_acc:0.664 ID_acc:0.408 lam:0.2211 lr:7.66e-03
+2026-05-14 01:28:39,632 PAT.train INFO: Epoch[16] Iter[120/561] loss:4.767 reid:3.951 pc:0.003 cam:0.814 cam_acc:0.658 ID_acc:0.432 lam:0.2220 lr:7.66e-03
+2026-05-14 01:29:12,731 PAT.train INFO: Epoch[16] Iter[180/561] loss:4.718 reid:3.898 pc:0.003 cam:0.817 cam_acc:0.652 ID_acc:0.451 lam:0.2229 lr:7.66e-03
+2026-05-14 01:29:45,810 PAT.train INFO: Epoch[16] Iter[240/561] loss:4.688 reid:3.867 pc:0.004 cam:0.817 cam_acc:0.653 ID_acc:0.469 lam:0.2238 lr:7.66e-03
+2026-05-14 01:30:18,872 PAT.train INFO: Epoch[16] Iter[300/561] loss:4.652 reid:3.824 pc:0.004 cam:0.824 cam_acc:0.649 ID_acc:0.482 lam:0.2247 lr:7.66e-03
+2026-05-14 01:30:52,037 PAT.train INFO: Epoch[16] Iter[360/561] loss:4.569 reid:3.742 pc:0.005 cam:0.822 cam_acc:0.649 ID_acc:0.505 lam:0.2256 lr:7.66e-03
+2026-05-14 01:31:25,131 PAT.train INFO: Epoch[16] Iter[420/561] loss:4.503 reid:3.679 pc:0.005 cam:0.819 cam_acc:0.653 ID_acc:0.523 lam:0.2265 lr:7.66e-03
+2026-05-14 01:31:58,267 PAT.train INFO: Epoch[16] Iter[480/561] loss:4.436 reid:3.610 pc:0.006 cam:0.820 cam_acc:0.652 ID_acc:0.539 lam:0.2273 lr:7.66e-03
+2026-05-14 01:32:31,506 PAT.train INFO: Epoch[16] Iter[540/561] loss:4.333 reid:3.511 pc:0.006 cam:0.816 cam_acc:0.655 ID_acc:0.562 lam:0.2282 lr:7.66e-03
+2026-05-14 01:32:41,004 PAT.train INFO: Epoch 16 done. lambda_eff=0.2284 cam_acc=0.657 Time/batch:0.553s Speed:57.8img/s
+2026-05-14 01:33:15,055 PAT.train INFO: Epoch[17] Iter[60/561] loss:4.698 reid:3.853 pc:0.004 cam:0.841 cam_acc:0.633 ID_acc:0.443 lam:0.2293 lr:7.62e-03
+2026-05-14 01:33:48,446 PAT.train INFO: Epoch[17] Iter[120/561] loss:4.713 reid:3.859 pc:0.004 cam:0.850 cam_acc:0.630 ID_acc:0.446 lam:0.2301 lr:7.62e-03
+2026-05-14 01:34:21,671 PAT.train INFO: Epoch[17] Iter[180/561] loss:4.619 reid:3.773 pc:0.004 cam:0.842 cam_acc:0.639 ID_acc:0.470 lam:0.2310 lr:7.62e-03
+2026-05-14 01:34:54,670 PAT.train INFO: Epoch[17] Iter[240/561] loss:4.561 reid:3.718 pc:0.004 cam:0.839 cam_acc:0.641 ID_acc:0.487 lam:0.2318 lr:7.62e-03
+2026-05-14 01:35:27,652 PAT.train INFO: Epoch[17] Iter[300/561] loss:4.512 reid:3.662 pc:0.007 cam:0.843 cam_acc:0.640 ID_acc:0.505 lam:0.2326 lr:7.62e-03
+2026-05-14 01:36:00,654 PAT.train INFO: Epoch[17] Iter[360/561] loss:4.446 reid:3.600 pc:0.008 cam:0.838 cam_acc:0.641 ID_acc:0.522 lam:0.2334 lr:7.62e-03
+2026-05-14 01:36:33,797 PAT.train INFO: Epoch[17] Iter[420/561] loss:4.379 reid:3.535 pc:0.009 cam:0.835 cam_acc:0.642 ID_acc:0.542 lam:0.2342 lr:7.62e-03
+2026-05-14 01:37:06,872 PAT.train INFO: Epoch[17] Iter[480/561] loss:4.305 reid:3.463 pc:0.011 cam:0.831 cam_acc:0.643 ID_acc:0.560 lam:0.2349 lr:7.62e-03
+2026-05-14 01:37:39,966 PAT.train INFO: Epoch[17] Iter[540/561] loss:4.214 reid:3.379 pc:0.012 cam:0.823 cam_acc:0.650 ID_acc:0.580 lam:0.2357 lr:7.62e-03
+2026-05-14 01:37:49,417 PAT.train INFO: Epoch 17 done. lambda_eff=0.2359 cam_acc=0.652 Time/batch:0.554s Speed:57.8img/s
+2026-05-14 01:38:23,185 PAT.train INFO: Epoch[18] Iter[60/561] loss:4.483 reid:3.638 pc:0.015 cam:0.830 cam_acc:0.647 ID_acc:0.500 lam:0.2367 lr:7.57e-03
+2026-05-14 01:38:56,331 PAT.train INFO: Epoch[18] Iter[120/561] loss:4.493 reid:3.660 pc:0.009 cam:0.824 cam_acc:0.643 ID_acc:0.501 lam:0.2375 lr:7.57e-03
+2026-05-14 01:39:29,560 PAT.train INFO: Epoch[18] Iter[180/561] loss:4.467 reid:3.633 pc:0.007 cam:0.827 cam_acc:0.641 ID_acc:0.508 lam:0.2382 lr:7.57e-03
+2026-05-14 01:40:02,728 PAT.train INFO: Epoch[18] Iter[240/561] loss:4.428 reid:3.594 pc:0.009 cam:0.825 cam_acc:0.649 ID_acc:0.515 lam:0.2390 lr:7.57e-03
+2026-05-14 01:40:35,858 PAT.train INFO: Epoch[18] Iter[300/561] loss:4.385 reid:3.548 pc:0.011 cam:0.826 cam_acc:0.648 ID_acc:0.527 lam:0.2397 lr:7.57e-03
+2026-05-14 01:41:08,972 PAT.train INFO: Epoch[18] Iter[360/561] loss:4.326 reid:3.488 pc:0.013 cam:0.825 cam_acc:0.649 ID_acc:0.543 lam:0.2404 lr:7.57e-03
+2026-05-14 01:41:42,179 PAT.train INFO: Epoch[18] Iter[420/561] loss:4.271 reid:3.432 pc:0.015 cam:0.824 cam_acc:0.649 ID_acc:0.560 lam:0.2411 lr:7.57e-03
+2026-05-14 01:42:15,359 PAT.train INFO: Epoch[18] Iter[480/561] loss:4.191 reid:3.355 pc:0.015 cam:0.821 cam_acc:0.652 ID_acc:0.578 lam:0.2418 lr:7.57e-03
+2026-05-14 01:42:48,513 PAT.train INFO: Epoch[18] Iter[540/561] loss:4.096 reid:3.266 pc:0.014 cam:0.816 cam_acc:0.655 ID_acc:0.601 lam:0.2425 lr:7.57e-03
+2026-05-14 01:42:58,593 PAT.train INFO: Epoch 18 done. lambda_eff=0.2427 cam_acc=0.657 Time/batch:0.554s Speed:57.8img/s
+2026-05-14 01:43:32,520 PAT.train INFO: Epoch[19] Iter[60/561] loss:4.285 reid:3.501 pc:0.006 cam:0.778 cam_acc:0.676 ID_acc:0.515 lam:0.2435 lr:7.52e-03
+2026-05-14 01:44:05,806 PAT.train INFO: Epoch[19] Iter[120/561] loss:4.311 reid:3.509 pc:0.006 cam:0.796 cam_acc:0.660 ID_acc:0.519 lam:0.2441 lr:7.52e-03
+2026-05-14 01:44:39,074 PAT.train INFO: Epoch[19] Iter[180/561] loss:4.318 reid:3.498 pc:0.008 cam:0.812 cam_acc:0.656 ID_acc:0.529 lam:0.2448 lr:7.52e-03
+2026-05-14 01:45:12,218 PAT.train INFO: Epoch[19] Iter[240/561] loss:4.271 reid:3.448 pc:0.009 cam:0.813 cam_acc:0.656 ID_acc:0.542 lam:0.2455 lr:7.52e-03
+2026-05-14 01:45:45,363 PAT.train INFO: Epoch[19] Iter[300/561] loss:4.214 reid:3.395 pc:0.009 cam:0.810 cam_acc:0.659 ID_acc:0.559 lam:0.2461 lr:7.52e-03
+2026-05-14 01:46:18,532 PAT.train INFO: Epoch[19] Iter[360/561] loss:4.166 reid:3.347 pc:0.010 cam:0.809 cam_acc:0.658 ID_acc:0.575 lam:0.2468 lr:7.52e-03
+2026-05-14 01:46:51,628 PAT.train INFO: Epoch[19] Iter[420/561] loss:4.126 reid:3.304 pc:0.010 cam:0.812 cam_acc:0.655 ID_acc:0.588 lam:0.2474 lr:7.52e-03
+2026-05-14 01:47:24,612 PAT.train INFO: Epoch[19] Iter[480/561] loss:4.065 reid:3.246 pc:0.010 cam:0.809 cam_acc:0.658 ID_acc:0.604 lam:0.2481 lr:7.52e-03
+2026-05-14 01:47:57,602 PAT.train INFO: Epoch[19] Iter[540/561] loss:3.984 reid:3.171 pc:0.010 cam:0.803 cam_acc:0.661 ID_acc:0.624 lam:0.2487 lr:7.52e-03
+2026-05-14 01:48:06,496 PAT.train INFO: Epoch 19 done. lambda_eff=0.2489 cam_acc=0.663 Time/batch:0.554s Speed:57.8img/s
+2026-05-14 01:48:40,593 PAT.train INFO: Epoch[20] Iter[60/561] loss:4.401 reid:3.595 pc:0.007 cam:0.800 cam_acc:0.663 ID_acc:0.492 lam:0.2496 lr:7.47e-03
+2026-05-14 01:49:14,172 PAT.train INFO: Epoch[20] Iter[120/561] loss:4.333 reid:3.529 pc:0.005 cam:0.798 cam_acc:0.659 ID_acc:0.511 lam:0.2502 lr:7.47e-03
+2026-05-14 01:49:47,616 PAT.train INFO: Epoch[20] Iter[180/561] loss:4.238 reid:3.434 pc:0.005 cam:0.799 cam_acc:0.659 ID_acc:0.544 lam:0.2508 lr:7.47e-03
+2026-05-14 01:50:20,961 PAT.train INFO: Epoch[20] Iter[240/561] loss:4.193 reid:3.379 pc:0.005 cam:0.808 cam_acc:0.653 ID_acc:0.558 lam:0.2514 lr:7.47e-03
+2026-05-14 01:50:54,282 PAT.train INFO: Epoch[20] Iter[300/561] loss:4.151 reid:3.331 pc:0.006 cam:0.814 cam_acc:0.653 ID_acc:0.574 lam:0.2520 lr:7.47e-03
+2026-05-14 01:51:27,645 PAT.train INFO: Epoch[20] Iter[360/561] loss:4.097 reid:3.280 pc:0.007 cam:0.811 cam_acc:0.652 ID_acc:0.591 lam:0.2526 lr:7.47e-03
+2026-05-14 01:52:01,016 PAT.train INFO: Epoch[20] Iter[420/561] loss:4.020 reid:3.203 pc:0.008 cam:0.809 cam_acc:0.654 ID_acc:0.610 lam:0.2531 lr:7.47e-03
+2026-05-14 01:52:34,340 PAT.train INFO: Epoch[20] Iter[480/561] loss:3.960 reid:3.144 pc:0.008 cam:0.808 cam_acc:0.656 ID_acc:0.626 lam:0.2537 lr:7.47e-03
+2026-05-14 01:53:07,701 PAT.train INFO: Epoch[20] Iter[540/561] loss:3.885 reid:3.074 pc:0.008 cam:0.802 cam_acc:0.660 ID_acc:0.644 lam:0.2543 lr:7.47e-03
+2026-05-14 01:53:17,812 PAT.train INFO: Epoch 20 done. lambda_eff=0.2544 cam_acc=0.663 Time/batch:0.558s Speed:57.4img/s
+2026-05-14 01:53:17,812 PAT.test INFO: Enter inferencing
+2026-05-14 01:56:32,217 PAT.test INFO: Validation Results
+2026-05-14 01:56:32,217 PAT.test INFO: mAP: 53.8%
+2026-05-14 01:56:32,218 PAT.test INFO: CMC curve, Rank-1  :70.9%
+2026-05-14 01:56:32,218 PAT.test INFO: CMC curve, Rank-5  :88.4%
+2026-05-14 01:56:32,218 PAT.test INFO: CMC curve, Rank-10 :93.4%
+2026-05-14 01:56:32,218 PAT.test INFO: total inference time: 194.40
+2026-05-14 01:56:32,223 PAT.train INFO: =====saving epoch: 20=====
+2026-05-14 01:57:04,726 PAT.train INFO: Epoch[21] Iter[60/561] loss:4.047 reid:3.270 pc:0.005 cam:0.772 cam_acc:0.680 ID_acc:0.533 lam:0.2550 lr:7.42e-03
+2026-05-14 01:57:35,338 PAT.train INFO: Epoch[21] Iter[120/561] loss:4.114 reid:3.314 pc:0.007 cam:0.793 cam_acc:0.664 ID_acc:0.548 lam:0.2556 lr:7.42e-03
+2026-05-14 01:58:05,919 PAT.train INFO: Epoch[21] Iter[180/561] loss:4.093 reid:3.294 pc:0.007 cam:0.792 cam_acc:0.665 ID_acc:0.568 lam:0.2561 lr:7.42e-03
+2026-05-14 01:58:36,542 PAT.train INFO: Epoch[21] Iter[240/561] loss:4.046 reid:3.252 pc:0.007 cam:0.787 cam_acc:0.667 ID_acc:0.582 lam:0.2567 lr:7.42e-03
+2026-05-14 01:59:07,282 PAT.train INFO: Epoch[21] Iter[300/561] loss:4.001 reid:3.205 pc:0.007 cam:0.789 cam_acc:0.666 ID_acc:0.598 lam:0.2572 lr:7.42e-03
+2026-05-14 01:59:38,063 PAT.train INFO: Epoch[21] Iter[360/561] loss:3.941 reid:3.145 pc:0.008 cam:0.788 cam_acc:0.666 ID_acc:0.618 lam:0.2577 lr:7.42e-03
+2026-05-14 02:00:08,702 PAT.train INFO: Epoch[21] Iter[420/561] loss:3.887 reid:3.091 pc:0.009 cam:0.787 cam_acc:0.668 ID_acc:0.632 lam:0.2583 lr:7.42e-03
+2026-05-14 02:00:39,394 PAT.train INFO: Epoch[21] Iter[480/561] loss:3.828 reid:3.033 pc:0.009 cam:0.787 cam_acc:0.668 ID_acc:0.647 lam:0.2588 lr:7.42e-03
+2026-05-14 02:01:10,110 PAT.train INFO: Epoch[21] Iter[540/561] loss:3.751 reid:2.958 pc:0.009 cam:0.785 cam_acc:0.670 ID_acc:0.665 lam:0.2593 lr:7.42e-03
+2026-05-14 02:01:19,434 PAT.train INFO: Epoch 21 done. lambda_eff=0.2594 cam_acc=0.671 Time/batch:0.513s Speed:62.4img/s
+2026-05-14 02:01:50,949 PAT.train INFO: Epoch[22] Iter[60/561] loss:4.209 reid:3.406 pc:0.011 cam:0.792 cam_acc:0.670 ID_acc:0.529 lam:0.2600 lr:7.37e-03
+2026-05-14 02:02:21,678 PAT.train INFO: Epoch[22] Iter[120/561] loss:4.103 reid:3.298 pc:0.015 cam:0.791 cam_acc:0.671 ID_acc:0.560 lam:0.2605 lr:7.37e-03
+2026-05-14 02:02:52,508 PAT.train INFO: Epoch[22] Iter[180/561] loss:4.014 reid:3.212 pc:0.016 cam:0.785 cam_acc:0.673 ID_acc:0.586 lam:0.2610 lr:7.37e-03
+2026-05-14 02:03:23,251 PAT.train INFO: Epoch[22] Iter[240/561] loss:3.965 reid:3.167 pc:0.015 cam:0.783 cam_acc:0.672 ID_acc:0.604 lam:0.2614 lr:7.37e-03
+2026-05-14 02:03:54,007 PAT.train INFO: Epoch[22] Iter[300/561] loss:3.899 reid:3.106 pc:0.014 cam:0.778 cam_acc:0.675 ID_acc:0.622 lam:0.2619 lr:7.37e-03
+2026-05-14 02:04:24,791 PAT.train INFO: Epoch[22] Iter[360/561] loss:3.855 reid:3.060 pc:0.014 cam:0.781 cam_acc:0.673 ID_acc:0.637 lam:0.2624 lr:7.37e-03
+2026-05-14 02:04:55,505 PAT.train INFO: Epoch[22] Iter[420/561] loss:3.805 reid:3.009 pc:0.013 cam:0.783 cam_acc:0.672 ID_acc:0.651 lam:0.2629 lr:7.37e-03
+2026-05-14 02:05:57,269 PAT.train INFO: Epoch[22] Iter[540/561] loss:3.673 reid:2.878 pc:0.011 cam:0.783 cam_acc:0.671 ID_acc:0.682 lam:0.2638 lr:7.37e-03
+2026-05-14 02:06:07,161 PAT.train INFO: Epoch 22 done. lambda_eff=0.2639 cam_acc=0.673 Time/batch:0.515s Speed:62.2img/s
+2026-05-14 02:06:39,095 PAT.train INFO: Epoch[23] Iter[60/561] loss:3.945 reid:3.123 pc:0.005 cam:0.817 cam_acc:0.659 ID_acc:0.580 lam:0.2644 lr:7.31e-03
+2026-05-14 02:07:09,904 PAT.train INFO: Epoch[23] Iter[120/561] loss:3.865 reid:3.048 pc:0.003 cam:0.814 cam_acc:0.651 ID_acc:0.614 lam:0.2648 lr:7.31e-03
+2026-05-14 02:07:40,780 PAT.train INFO: Epoch[23] Iter[180/561] loss:3.847 reid:3.038 pc:0.002 cam:0.806 cam_acc:0.657 ID_acc:0.618 lam:0.2653 lr:7.31e-03
+2026-05-14 02:08:11,579 PAT.train INFO: Epoch[23] Iter[240/561] loss:3.801 reid:3.001 pc:0.003 cam:0.798 cam_acc:0.661 ID_acc:0.626 lam:0.2657 lr:7.31e-03
+2026-05-14 02:08:42,385 PAT.train INFO: Epoch[23] Iter[300/561] loss:3.763 reid:2.963 pc:0.003 cam:0.797 cam_acc:0.660 ID_acc:0.641 lam:0.2661 lr:7.31e-03
+2026-05-14 02:09:13,212 PAT.train INFO: Epoch[23] Iter[360/561] loss:3.737 reid:2.939 pc:0.003 cam:0.795 cam_acc:0.662 ID_acc:0.648 lam:0.2666 lr:7.31e-03
+2026-05-14 02:09:44,074 PAT.train INFO: Epoch[23] Iter[420/561] loss:3.699 reid:2.899 pc:0.003 cam:0.797 cam_acc:0.662 ID_acc:0.664 lam:0.2670 lr:7.31e-03
+2026-05-14 02:10:14,925 PAT.train INFO: Epoch[23] Iter[480/561] loss:3.638 reid:2.841 pc:0.004 cam:0.793 cam_acc:0.664 ID_acc:0.682 lam:0.2674 lr:7.31e-03
+2026-05-14 02:10:45,841 PAT.train INFO: Epoch[23] Iter[540/561] loss:3.571 reid:2.776 pc:0.004 cam:0.790 cam_acc:0.666 ID_acc:0.699 lam:0.2678 lr:7.31e-03
+2026-05-14 02:10:54,668 PAT.train INFO: Epoch 23 done. lambda_eff=0.2679 cam_acc=0.668 Time/batch:0.516s Speed:62.0img/s
+2026-05-14 02:11:26,138 PAT.train INFO: Epoch[24] Iter[60/561] loss:3.915 reid:3.099 pc:0.015 cam:0.801 cam_acc:0.661 ID_acc:0.595 lam:0.2684 lr:7.25e-03
+2026-05-14 02:11:56,765 PAT.train INFO: Epoch[24] Iter[120/561] loss:3.843 reid:3.038 pc:0.010 cam:0.795 cam_acc:0.668 ID_acc:0.619 lam:0.2688 lr:7.25e-03
+2026-05-14 02:12:27,436 PAT.train INFO: Epoch[24] Iter[180/561] loss:3.828 reid:3.027 pc:0.009 cam:0.792 cam_acc:0.670 ID_acc:0.626 lam:0.2691 lr:7.25e-03
+2026-05-14 02:12:58,076 PAT.train INFO: Epoch[24] Iter[240/561] loss:3.807 reid:3.004 pc:0.011 cam:0.792 cam_acc:0.670 ID_acc:0.636 lam:0.2695 lr:7.25e-03
+2026-05-14 02:13:28,867 PAT.train INFO: Epoch[24] Iter[300/561] loss:3.757 reid:2.957 pc:0.012 cam:0.788 cam_acc:0.670 ID_acc:0.655 lam:0.2699 lr:7.25e-03
+2026-05-14 02:13:59,589 PAT.train INFO: Epoch[24] Iter[360/561] loss:3.707 reid:2.907 pc:0.012 cam:0.788 cam_acc:0.670 ID_acc:0.669 lam:0.2703 lr:7.25e-03
+2026-05-14 02:14:30,359 PAT.train INFO: Epoch[24] Iter[420/561] loss:3.654 reid:2.857 pc:0.011 cam:0.786 cam_acc:0.671 ID_acc:0.684 lam:0.2707 lr:7.25e-03
+2026-05-14 02:15:01,148 PAT.train INFO: Epoch[24] Iter[480/561] loss:3.607 reid:2.810 pc:0.011 cam:0.786 cam_acc:0.672 ID_acc:0.699 lam:0.2710 lr:7.25e-03
+2026-05-14 02:15:31,912 PAT.train INFO: Epoch[24] Iter[540/561] loss:3.537 reid:2.746 pc:0.011 cam:0.780 cam_acc:0.675 ID_acc:0.715 lam:0.2714 lr:7.25e-03
+2026-05-14 02:15:41,748 PAT.train INFO: Epoch 24 done. lambda_eff=0.2715 cam_acc=0.676 Time/batch:0.513s Speed:62.3img/s
+2026-05-14 02:16:13,264 PAT.train INFO: Epoch[25] Iter[60/561] loss:3.848 reid:3.011 pc:0.035 cam:0.802 cam_acc:0.655 ID_acc:0.627 lam:0.2719 lr:7.19e-03
+2026-05-14 02:16:43,961 PAT.train INFO: Epoch[25] Iter[120/561] loss:3.920 reid:3.075 pc:0.030 cam:0.815 cam_acc:0.654 ID_acc:0.622 lam:0.2723 lr:7.19e-03
+2026-05-14 02:17:14,626 PAT.train INFO: Epoch[25] Iter[180/561] loss:3.848 reid:3.020 pc:0.033 cam:0.795 cam_acc:0.658 ID_acc:0.635 lam:0.2726 lr:7.19e-03
+2026-05-14 02:17:45,220 PAT.train INFO: Epoch[25] Iter[240/561] loss:3.791 reid:2.965 pc:0.029 cam:0.796 cam_acc:0.661 ID_acc:0.652 lam:0.2730 lr:7.19e-03
+2026-05-14 02:18:15,950 PAT.train INFO: Epoch[25] Iter[300/561] loss:3.720 reid:2.902 pc:0.027 cam:0.791 cam_acc:0.663 ID_acc:0.670 lam:0.2733 lr:7.19e-03
+2026-05-14 02:18:46,578 PAT.train INFO: Epoch[25] Iter[360/561] loss:3.675 reid:2.858 pc:0.025 cam:0.791 cam_acc:0.662 ID_acc:0.684 lam:0.2736 lr:7.19e-03
+2026-05-14 02:19:17,221 PAT.train INFO: Epoch[25] Iter[420/561] loss:3.608 reid:2.801 pc:0.023 cam:0.784 cam_acc:0.667 ID_acc:0.700 lam:0.2740 lr:7.19e-03
+2026-05-14 02:19:47,888 PAT.train INFO: Epoch[25] Iter[480/561] loss:3.552 reid:2.752 pc:0.021 cam:0.778 cam_acc:0.670 ID_acc:0.714 lam:0.2743 lr:7.19e-03
+2026-05-14 02:20:18,589 PAT.train INFO: Epoch[25] Iter[540/561] loss:3.477 reid:2.680 pc:0.020 cam:0.777 cam_acc:0.673 ID_acc:0.730 lam:0.2746 lr:7.19e-03
+2026-05-14 02:20:26,877 PAT.train INFO: Epoch 25 done. lambda_eff=0.2747 cam_acc=0.674 Time/batch:0.513s Speed:62.4img/s
+2026-05-14 02:20:26,878 PAT.test INFO: Enter inferencing
+2026-05-14 02:23:41,584 PAT.test INFO: Validation Results
+2026-05-14 02:23:41,584 PAT.test INFO: mAP: 58.5%
+2026-05-14 02:23:41,584 PAT.test INFO: CMC curve, Rank-1  :74.4%
+2026-05-14 02:23:41,584 PAT.test INFO: CMC curve, Rank-5  :90.4%
+2026-05-14 02:23:41,584 PAT.test INFO: CMC curve, Rank-10 :95.0%
+2026-05-14 02:23:41,584 PAT.test INFO: total inference time: 194.70
+2026-05-14 02:23:41,586 PAT.train INFO: =====saving epoch: 25=====
+2026-05-14 02:24:14,059 PAT.train INFO: Epoch[26] Iter[60/561] loss:3.715 reid:2.937 pc:0.002 cam:0.776 cam_acc:0.679 ID_acc:0.642 lam:0.2751 lr:7.13e-03
+2026-05-14 02:24:44,652 PAT.train INFO: Epoch[26] Iter[120/561] loss:3.714 reid:2.935 pc:0.002 cam:0.778 cam_acc:0.676 ID_acc:0.649 lam:0.2754 lr:7.13e-03
+2026-05-14 02:25:15,288 PAT.train INFO: Epoch[26] Iter[180/561] loss:3.667 reid:2.895 pc:0.003 cam:0.770 cam_acc:0.675 ID_acc:0.664 lam:0.2757 lr:7.13e-03
+2026-05-14 02:25:45,938 PAT.train INFO: Epoch[26] Iter[240/561] loss:3.609 reid:2.839 pc:0.004 cam:0.766 cam_acc:0.676 ID_acc:0.686 lam:0.2760 lr:7.13e-03
+2026-05-14 02:26:16,560 PAT.train INFO: Epoch[26] Iter[300/561] loss:3.588 reid:2.806 pc:0.005 cam:0.777 cam_acc:0.670 ID_acc:0.693 lam:0.2763 lr:7.13e-03
+2026-05-14 02:26:47,179 PAT.train INFO: Epoch[26] Iter[360/561] loss:3.539 reid:2.758 pc:0.007 cam:0.774 cam_acc:0.674 ID_acc:0.706 lam:0.2766 lr:7.13e-03
+2026-05-14 02:27:17,889 PAT.train INFO: Epoch[26] Iter[420/561] loss:3.478 reid:2.699 pc:0.008 cam:0.771 cam_acc:0.676 ID_acc:0.718 lam:0.2769 lr:7.13e-03
+2026-05-14 02:27:48,619 PAT.train INFO: Epoch[26] Iter[480/561] loss:3.426 reid:2.649 pc:0.009 cam:0.768 cam_acc:0.679 ID_acc:0.731 lam:0.2772 lr:7.13e-03
+2026-05-14 02:28:19,268 PAT.train INFO: Epoch[26] Iter[540/561] loss:3.380 reid:2.603 pc:0.010 cam:0.767 cam_acc:0.681 ID_acc:0.745 lam:0.2775 lr:7.13e-03
+2026-05-14 02:28:27,559 PAT.train INFO: Epoch 26 done. lambda_eff=0.2776 cam_acc=0.682 Time/batch:0.512s Speed:62.4img/s
+2026-05-14 02:28:59,098 PAT.train INFO: Epoch[27] Iter[60/561] loss:3.699 reid:2.922 pc:0.021 cam:0.756 cam_acc:0.677 ID_acc:0.641 lam:0.2779 lr:7.06e-03
+2026-05-14 02:29:29,718 PAT.train INFO: Epoch[27] Iter[120/561] loss:3.645 reid:2.867 pc:0.021 cam:0.758 cam_acc:0.678 ID_acc:0.660 lam:0.2782 lr:7.06e-03
+2026-05-14 02:30:00,326 PAT.train INFO: Epoch[27] Iter[180/561] loss:3.598 reid:2.822 pc:0.018 cam:0.758 cam_acc:0.684 ID_acc:0.673 lam:0.2784 lr:7.06e-03
+2026-05-14 02:30:30,936 PAT.train INFO: Epoch[27] Iter[240/561] loss:3.566 reid:2.787 pc:0.015 cam:0.765 cam_acc:0.680 ID_acc:0.688 lam:0.2787 lr:7.06e-03
+2026-05-14 02:31:01,676 PAT.train INFO: Epoch[27] Iter[300/561] loss:3.525 reid:2.740 pc:0.013 cam:0.772 cam_acc:0.674 ID_acc:0.702 lam:0.2790 lr:7.06e-03
+2026-05-14 02:31:32,328 PAT.train INFO: Epoch[27] Iter[360/561] loss:3.498 reid:2.711 pc:0.012 cam:0.774 cam_acc:0.674 ID_acc:0.711 lam:0.2793 lr:7.06e-03
+2026-05-14 02:32:02,948 PAT.train INFO: Epoch[27] Iter[420/561] loss:3.443 reid:2.659 pc:0.011 cam:0.773 cam_acc:0.674 ID_acc:0.726 lam:0.2795 lr:7.06e-03
+2026-05-14 02:32:33,602 PAT.train INFO: Epoch[27] Iter[480/561] loss:3.388 reid:2.607 pc:0.012 cam:0.770 cam_acc:0.677 ID_acc:0.740 lam:0.2798 lr:7.06e-03
+2026-05-14 02:33:04,432 PAT.train INFO: Epoch[27] Iter[540/561] loss:3.319 reid:2.543 pc:0.013 cam:0.764 cam_acc:0.680 ID_acc:0.754 lam:0.2801 lr:7.06e-03
+2026-05-14 02:33:13,291 PAT.train INFO: Epoch 27 done. lambda_eff=0.2801 cam_acc=0.681 Time/batch:0.513s Speed:62.4img/s
+2026-05-14 02:33:44,976 PAT.train INFO: Epoch[28] Iter[60/561] loss:3.543 reid:2.734 pc:0.010 cam:0.798 cam_acc:0.668 ID_acc:0.694 lam:0.2804 lr:6.99e-03
+2026-05-14 02:34:15,825 PAT.train INFO: Epoch[28] Iter[120/561] loss:3.570 reid:2.782 pc:0.010 cam:0.777 cam_acc:0.681 ID_acc:0.695 lam:0.2807 lr:6.99e-03
+2026-05-14 02:34:46,571 PAT.train INFO: Epoch[28] Iter[180/561] loss:3.522 reid:2.747 pc:0.012 cam:0.762 cam_acc:0.687 ID_acc:0.700 lam:0.2809 lr:6.99e-03
+2026-05-14 02:35:17,310 PAT.train INFO: Epoch[28] Iter[240/561] loss:3.502 reid:2.722 pc:0.013 cam:0.767 cam_acc:0.679 ID_acc:0.710 lam:0.2811 lr:6.99e-03
+2026-05-14 02:35:48,058 PAT.train INFO: Epoch[28] Iter[300/561] loss:3.456 reid:2.667 pc:0.013 cam:0.776 cam_acc:0.672 ID_acc:0.724 lam:0.2814 lr:6.99e-03
+2026-05-14 02:36:18,790 PAT.train INFO: Epoch[28] Iter[360/561] loss:3.410 reid:2.623 pc:0.014 cam:0.773 cam_acc:0.675 ID_acc:0.736 lam:0.2816 lr:6.99e-03
+2026-05-14 02:36:49,567 PAT.train INFO: Epoch[28] Iter[420/561] loss:3.375 reid:2.585 pc:0.014 cam:0.777 cam_acc:0.673 ID_acc:0.744 lam:0.2819 lr:6.99e-03
+2026-05-14 02:37:20,329 PAT.train INFO: Epoch[28] Iter[480/561] loss:3.327 reid:2.537 pc:0.014 cam:0.776 cam_acc:0.674 ID_acc:0.755 lam:0.2821 lr:6.99e-03
+2026-05-14 02:37:51,139 PAT.train INFO: Epoch[28] Iter[540/561] loss:3.274 reid:2.485 pc:0.016 cam:0.773 cam_acc:0.676 ID_acc:0.768 lam:0.2823 lr:6.99e-03
+2026-05-14 02:38:00,478 PAT.train INFO: Epoch 28 done. lambda_eff=0.2824 cam_acc=0.677 Time/batch:0.515s Speed:62.2img/s
+2026-05-14 02:38:32,074 PAT.train INFO: Epoch[29] Iter[60/561] loss:3.527 reid:2.725 pc:0.021 cam:0.781 cam_acc:0.670 ID_acc:0.701 lam:0.2826 lr:6.92e-03
+2026-05-14 02:39:02,757 PAT.train INFO: Epoch[29] Iter[120/561] loss:3.555 reid:2.758 pc:0.012 cam:0.784 cam_acc:0.668 ID_acc:0.700 lam:0.2829 lr:6.92e-03
+2026-05-14 02:39:33,513 PAT.train INFO: Epoch[29] Iter[180/561] loss:3.520 reid:2.732 pc:0.009 cam:0.779 cam_acc:0.668 ID_acc:0.708 lam:0.2831 lr:6.92e-03
+2026-05-14 02:40:04,138 PAT.train INFO: Epoch[29] Iter[240/561] loss:3.456 reid:2.671 pc:0.008 cam:0.777 cam_acc:0.670 ID_acc:0.720 lam:0.2833 lr:6.92e-03
+2026-05-14 02:40:34,801 PAT.train INFO: Epoch[29] Iter[300/561] loss:3.417 reid:2.632 pc:0.009 cam:0.776 cam_acc:0.670 ID_acc:0.729 lam:0.2835 lr:6.92e-03
+2026-05-14 02:41:05,443 PAT.train INFO: Epoch[29] Iter[360/561] loss:3.374 reid:2.589 pc:0.010 cam:0.775 cam_acc:0.669 ID_acc:0.740 lam:0.2837 lr:6.92e-03
+2026-05-14 02:41:36,097 PAT.train INFO: Epoch[29] Iter[420/561] loss:3.329 reid:2.547 pc:0.010 cam:0.772 cam_acc:0.669 ID_acc:0.749 lam:0.2839 lr:6.92e-03
+2026-05-14 02:42:06,847 PAT.train INFO: Epoch[29] Iter[480/561] loss:3.291 reid:2.505 pc:0.010 cam:0.775 cam_acc:0.669 ID_acc:0.760 lam:0.2841 lr:6.92e-03
+2026-05-14 02:42:37,603 PAT.train INFO: Epoch[29] Iter[540/561] loss:3.240 reid:2.456 pc:0.011 cam:0.773 cam_acc:0.670 ID_acc:0.772 lam:0.2844 lr:6.92e-03
+2026-05-14 02:42:47,483 PAT.train INFO: Epoch 29 done. lambda_eff=0.2844 cam_acc=0.672 Time/batch:0.513s Speed:62.3img/s
+2026-05-14 02:43:19,147 PAT.train INFO: Epoch[30] Iter[60/561] loss:3.288 reid:2.521 pc:0.010 cam:0.757 cam_acc:0.680 ID_acc:0.759 lam:0.2846 lr:6.85e-03
+2026-05-14 02:43:49,753 PAT.train INFO: Epoch[30] Iter[120/561] loss:3.357 reid:2.589 pc:0.007 cam:0.761 cam_acc:0.682 ID_acc:0.740 lam:0.2848 lr:6.85e-03
+2026-05-14 02:44:20,395 PAT.train INFO: Epoch[30] Iter[180/561] loss:3.327 reid:2.566 pc:0.007 cam:0.755 cam_acc:0.680 ID_acc:0.740 lam:0.2850 lr:6.85e-03
+2026-05-14 02:44:51,050 PAT.train INFO: Epoch[30] Iter[240/561] loss:3.315 reid:2.548 pc:0.006 cam:0.760 cam_acc:0.680 ID_acc:0.745 lam:0.2852 lr:6.85e-03
+2026-05-14 02:45:21,708 PAT.train INFO: Epoch[30] Iter[300/561] loss:3.286 reid:2.516 pc:0.006 cam:0.764 cam_acc:0.679 ID_acc:0.752 lam:0.2854 lr:6.85e-03
+2026-05-14 02:45:52,355 PAT.train INFO: Epoch[30] Iter[360/561] loss:3.268 reid:2.491 pc:0.006 cam:0.770 cam_acc:0.676 ID_acc:0.763 lam:0.2856 lr:6.85e-03
+2026-05-14 02:46:23,114 PAT.train INFO: Epoch[30] Iter[420/561] loss:3.243 reid:2.461 pc:0.007 cam:0.774 cam_acc:0.674 ID_acc:0.770 lam:0.2858 lr:6.85e-03
+2026-05-14 02:46:53,837 PAT.train INFO: Epoch[30] Iter[480/561] loss:3.205 reid:2.426 pc:0.008 cam:0.771 cam_acc:0.677 ID_acc:0.780 lam:0.2860 lr:6.85e-03
+2026-05-14 02:47:24,538 PAT.train INFO: Epoch[30] Iter[540/561] loss:3.152 reid:2.376 pc:0.008 cam:0.767 cam_acc:0.678 ID_acc:0.792 lam:0.2861 lr:6.85e-03
+2026-05-14 02:47:33,910 PAT.train INFO: Epoch 30 done. lambda_eff=0.2862 cam_acc=0.678 Time/batch:0.513s Speed:62.4img/s
+2026-05-14 02:47:33,911 PAT.test INFO: Enter inferencing
+2026-05-14 02:50:49,569 PAT.test INFO: Validation Results
+2026-05-14 02:50:49,648 PAT.test INFO: mAP: 62.0%
+2026-05-14 02:50:49,648 PAT.test INFO: CMC curve, Rank-1  :76.7%
+2026-05-14 02:50:49,648 PAT.test INFO: CMC curve, Rank-5  :92.0%
+2026-05-14 02:50:49,648 PAT.test INFO: CMC curve, Rank-10 :95.9%
+2026-05-14 02:50:49,648 PAT.test INFO: total inference time: 195.73
+2026-05-14 02:50:49,677 PAT.train INFO: =====saving epoch: 30=====
+2026-05-14 02:51:27,244 PAT.train INFO: Epoch[31] Iter[60/561] loss:3.405 reid:2.603 pc:0.032 cam:0.770 cam_acc:0.683 ID_acc:0.722 lam:0.2864 lr:6.78e-03
+2026-05-14 02:52:00,828 PAT.train INFO: Epoch[31] Iter[120/561] loss:3.423 reid:2.614 pc:0.037 cam:0.772 cam_acc:0.678 ID_acc:0.732 lam:0.2866 lr:6.78e-03
+2026-05-14 02:52:34,354 PAT.train INFO: Epoch[31] Iter[180/561] loss:3.398 reid:2.597 pc:0.029 cam:0.772 cam_acc:0.677 ID_acc:0.741 lam:0.2867 lr:6.78e-03
+2026-05-14 02:53:07,740 PAT.train INFO: Epoch[31] Iter[240/561] loss:3.374 reid:2.580 pc:0.023 cam:0.770 cam_acc:0.677 ID_acc:0.751 lam:0.2869 lr:6.78e-03
+2026-05-14 02:53:41,276 PAT.train INFO: Epoch[31] Iter[300/561] loss:3.324 reid:2.537 pc:0.020 cam:0.768 cam_acc:0.677 ID_acc:0.764 lam:0.2871 lr:6.78e-03
+2026-05-14 02:54:14,890 PAT.train INFO: Epoch[31] Iter[360/561] loss:3.276 reid:2.497 pc:0.018 cam:0.761 cam_acc:0.680 ID_acc:0.773 lam:0.2873 lr:6.78e-03
+2026-05-14 02:54:48,390 PAT.train INFO: Epoch[31] Iter[420/561] loss:3.239 reid:2.461 pc:0.016 cam:0.762 cam_acc:0.679 ID_acc:0.780 lam:0.2874 lr:6.78e-03
+2026-05-14 02:55:21,879 PAT.train INFO: Epoch[31] Iter[480/561] loss:3.192 reid:2.416 pc:0.015 cam:0.762 cam_acc:0.679 ID_acc:0.789 lam:0.2876 lr:6.78e-03
+2026-05-14 02:55:55,179 PAT.train INFO: Epoch[31] Iter[540/561] loss:3.150 reid:2.376 pc:0.013 cam:0.761 cam_acc:0.679 ID_acc:0.798 lam:0.2877 lr:6.78e-03
+2026-05-14 02:56:06,391 PAT.train INFO: Epoch 31 done. lambda_eff=0.2878 cam_acc=0.681 Time/batch:0.563s Speed:56.8img/s
+2026-05-14 02:56:40,548 PAT.train INFO: Epoch[32] Iter[60/561] loss:3.335 reid:2.573 pc:0.003 cam:0.759 cam_acc:0.684 ID_acc:0.742 lam:0.2880 lr:6.70e-03
+2026-05-14 02:57:14,202 PAT.train INFO: Epoch[32] Iter[120/561] loss:3.360 reid:2.571 pc:0.005 cam:0.785 cam_acc:0.668 ID_acc:0.736 lam:0.2881 lr:6.70e-03
+2026-05-14 02:57:47,547 PAT.train INFO: Epoch[32] Iter[180/561] loss:3.334 reid:2.544 pc:0.011 cam:0.779 cam_acc:0.672 ID_acc:0.742 lam:0.2883 lr:6.70e-03
+2026-05-14 02:58:20,724 PAT.train INFO: Epoch[32] Iter[240/561] loss:3.328 reid:2.516 pc:0.025 cam:0.787 cam_acc:0.666 ID_acc:0.752 lam:0.2884 lr:6.70e-03
+2026-05-14 02:58:54,078 PAT.train INFO: Epoch[32] Iter[300/561] loss:3.295 reid:2.478 pc:0.033 cam:0.783 cam_acc:0.670 ID_acc:0.762 lam:0.2886 lr:6.70e-03
+2026-05-14 02:59:27,369 PAT.train INFO: Epoch[32] Iter[360/561] loss:3.264 reid:2.452 pc:0.032 cam:0.781 cam_acc:0.670 ID_acc:0.771 lam:0.2887 lr:6.70e-03
+2026-05-14 03:00:00,610 PAT.train INFO: Epoch[32] Iter[420/561] loss:3.213 reid:2.411 pc:0.028 cam:0.774 cam_acc:0.673 ID_acc:0.781 lam:0.2889 lr:6.70e-03
+2026-05-14 03:00:33,825 PAT.train INFO: Epoch[32] Iter[480/561] loss:3.173 reid:2.377 pc:0.025 cam:0.770 cam_acc:0.675 ID_acc:0.790 lam:0.2890 lr:6.70e-03
+2026-05-14 03:01:06,982 PAT.train INFO: Epoch[32] Iter[540/561] loss:3.126 reid:2.335 pc:0.023 cam:0.768 cam_acc:0.675 ID_acc:0.801 lam:0.2892 lr:6.70e-03
+2026-05-14 03:01:17,032 PAT.train INFO: Epoch 32 done. lambda_eff=0.2892 cam_acc=0.676 Time/batch:0.557s Speed:57.5img/s
+2026-05-14 03:01:51,044 PAT.train INFO: Epoch[33] Iter[60/561] loss:3.342 reid:2.562 pc:0.002 cam:0.777 cam_acc:0.659 ID_acc:0.735 lam:0.2893 lr:6.63e-03
+2026-05-14 03:02:24,475 PAT.train INFO: Epoch[33] Iter[120/561] loss:3.334 reid:2.564 pc:0.003 cam:0.768 cam_acc:0.674 ID_acc:0.736 lam:0.2895 lr:6.63e-03
+2026-05-14 03:02:57,889 PAT.train INFO: Epoch[33] Iter[180/561] loss:3.309 reid:2.532 pc:0.005 cam:0.772 cam_acc:0.679 ID_acc:0.750 lam:0.2896 lr:6.63e-03
+2026-05-14 03:03:31,304 PAT.train INFO: Epoch[33] Iter[240/561] loss:3.264 reid:2.489 pc:0.008 cam:0.767 cam_acc:0.681 ID_acc:0.759 lam:0.2898 lr:6.63e-03
+2026-05-14 03:04:04,618 PAT.train INFO: Epoch[33] Iter[300/561] loss:3.230 reid:2.448 pc:0.011 cam:0.771 cam_acc:0.679 ID_acc:0.771 lam:0.2899 lr:6.63e-03
+2026-05-14 03:04:37,847 PAT.train INFO: Epoch[33] Iter[360/561] loss:3.200 reid:2.418 pc:0.011 cam:0.771 cam_acc:0.680 ID_acc:0.778 lam:0.2900 lr:6.63e-03
+2026-05-14 03:05:11,129 PAT.train INFO: Epoch[33] Iter[420/561] loss:3.145 reid:2.364 pc:0.012 cam:0.769 cam_acc:0.679 ID_acc:0.790 lam:0.2902 lr:6.63e-03
+2026-05-14 03:05:44,408 PAT.train INFO: Epoch[33] Iter[480/561] loss:3.113 reid:2.329 pc:0.012 cam:0.772 cam_acc:0.677 ID_acc:0.799 lam:0.2903 lr:6.63e-03
+2026-05-14 03:06:17,772 PAT.train INFO: Epoch[33] Iter[540/561] loss:3.069 reid:2.287 pc:0.011 cam:0.770 cam_acc:0.678 ID_acc:0.807 lam:0.2904 lr:6.63e-03
+2026-05-14 03:06:27,296 PAT.train INFO: Epoch 33 done. lambda_eff=0.2904 cam_acc=0.679 Time/batch:0.557s Speed:57.5img/s
+2026-05-14 03:07:01,216 PAT.train INFO: Epoch[34] Iter[60/561] loss:3.279 reid:2.492 pc:0.006 cam:0.781 cam_acc:0.670 ID_acc:0.757 lam:0.2906 lr:6.55e-03
+2026-05-14 03:07:34,545 PAT.train INFO: Epoch[34] Iter[120/561] loss:3.270 reid:2.483 pc:0.005 cam:0.782 cam_acc:0.666 ID_acc:0.764 lam:0.2907 lr:6.55e-03
+2026-05-14 03:08:07,841 PAT.train INFO: Epoch[34] Iter[180/561] loss:3.248 reid:2.468 pc:0.007 cam:0.773 cam_acc:0.672 ID_acc:0.769 lam:0.2908 lr:6.55e-03
+2026-05-14 03:08:41,117 PAT.train INFO: Epoch[34] Iter[240/561] loss:3.219 reid:2.436 pc:0.013 cam:0.771 cam_acc:0.670 ID_acc:0.779 lam:0.2909 lr:6.55e-03
+2026-05-14 03:09:14,430 PAT.train INFO: Epoch[34] Iter[300/561] loss:3.204 reid:2.418 pc:0.014 cam:0.772 cam_acc:0.670 ID_acc:0.787 lam:0.2911 lr:6.55e-03
+2026-05-14 03:09:47,696 PAT.train INFO: Epoch[34] Iter[360/561] loss:3.165 reid:2.378 pc:0.015 cam:0.771 cam_acc:0.672 ID_acc:0.799 lam:0.2912 lr:6.55e-03
+2026-05-14 03:10:20,841 PAT.train INFO: Epoch[34] Iter[420/561] loss:3.136 reid:2.352 pc:0.015 cam:0.769 cam_acc:0.674 ID_acc:0.805 lam:0.2913 lr:6.55e-03
+2026-05-14 03:10:54,004 PAT.train INFO: Epoch[34] Iter[480/561] loss:3.099 reid:2.317 pc:0.014 cam:0.767 cam_acc:0.676 ID_acc:0.812 lam:0.2914 lr:6.55e-03
+2026-05-14 03:11:27,285 PAT.train INFO: Epoch[34] Iter[540/561] loss:3.054 reid:2.275 pc:0.013 cam:0.766 cam_acc:0.676 ID_acc:0.821 lam:0.2915 lr:6.55e-03
+2026-05-14 03:11:37,334 PAT.train INFO: Epoch 34 done. lambda_eff=0.2916 cam_acc=0.677 Time/batch:0.555s Speed:57.6img/s
+2026-05-14 03:12:11,516 PAT.train INFO: Epoch[35] Iter[60/561] loss:3.191 reid:2.404 pc:0.003 cam:0.784 cam_acc:0.673 ID_acc:0.781 lam:0.2917 lr:6.47e-03
+2026-05-14 03:12:45,048 PAT.train INFO: Epoch[35] Iter[120/561] loss:3.221 reid:2.436 pc:0.003 cam:0.782 cam_acc:0.672 ID_acc:0.772 lam:0.2918 lr:6.47e-03
+2026-05-14 03:13:18,593 PAT.train INFO: Epoch[35] Iter[180/561] loss:3.199 reid:2.431 pc:0.003 cam:0.764 cam_acc:0.681 ID_acc:0.774 lam:0.2919 lr:6.47e-03
+2026-05-14 03:13:51,907 PAT.train INFO: Epoch[35] Iter[240/561] loss:3.174 reid:2.405 pc:0.004 cam:0.765 cam_acc:0.681 ID_acc:0.783 lam:0.2920 lr:6.47e-03
+2026-05-14 03:14:25,069 PAT.train INFO: Epoch[35] Iter[300/561] loss:3.136 reid:2.368 pc:0.004 cam:0.764 cam_acc:0.679 ID_acc:0.793 lam:0.2921 lr:6.47e-03
+2026-05-14 03:14:58,299 PAT.train INFO: Epoch[35] Iter[360/561] loss:3.101 reid:2.331 pc:0.005 cam:0.765 cam_acc:0.678 ID_acc:0.803 lam:0.2922 lr:6.47e-03
+2026-05-14 03:15:31,474 PAT.train INFO: Epoch[35] Iter[420/561] loss:3.064 reid:2.297 pc:0.006 cam:0.761 cam_acc:0.681 ID_acc:0.811 lam:0.2923 lr:6.47e-03
+2026-05-14 03:16:04,595 PAT.train INFO: Epoch[35] Iter[480/561] loss:3.043 reid:2.274 pc:0.007 cam:0.761 cam_acc:0.679 ID_acc:0.818 lam:0.2924 lr:6.47e-03
+2026-05-14 03:16:37,959 PAT.train INFO: Epoch[35] Iter[540/561] loss:2.998 reid:2.231 pc:0.007 cam:0.760 cam_acc:0.680 ID_acc:0.827 lam:0.2925 lr:6.47e-03
+2026-05-14 03:16:48,088 PAT.train INFO: Epoch 35 done. lambda_eff=0.2925 cam_acc=0.681 Time/batch:0.557s Speed:57.5img/s
+2026-05-14 03:16:48,089 PAT.test INFO: Enter inferencing
+2026-05-14 03:20:02,510 PAT.test INFO: Validation Results
+2026-05-14 03:20:02,510 PAT.test INFO: mAP: 65.2%
+2026-05-14 03:20:02,510 PAT.test INFO: CMC curve, Rank-1  :79.0%
+2026-05-14 03:20:02,510 PAT.test INFO: CMC curve, Rank-5  :93.7%
+2026-05-14 03:20:02,510 PAT.test INFO: CMC curve, Rank-10 :96.8%
+2026-05-14 03:20:02,510 PAT.test INFO: total inference time: 194.42
+2026-05-14 03:20:02,516 PAT.train INFO: =====saving epoch: 35=====
+2026-05-14 03:20:35,199 PAT.train INFO: Epoch[36] Iter[60/561] loss:3.047 reid:2.284 pc:0.007 cam:0.756 cam_acc:0.692 ID_acc:0.796 lam:0.2926 lr:6.38e-03
+2026-05-14 03:21:05,890 PAT.train INFO: Epoch[36] Iter[120/561] loss:3.114 reid:2.342 pc:0.006 cam:0.766 cam_acc:0.682 ID_acc:0.789 lam:0.2927 lr:6.38e-03
+2026-05-14 03:21:36,544 PAT.train INFO: Epoch[36] Iter[180/561] loss:3.085 reid:2.321 pc:0.005 cam:0.759 cam_acc:0.680 ID_acc:0.799 lam:0.2928 lr:6.38e-03
+2026-05-14 03:22:07,190 PAT.train INFO: Epoch[36] Iter[240/561] loss:3.084 reid:2.317 pc:0.006 cam:0.761 cam_acc:0.679 ID_acc:0.803 lam:0.2929 lr:6.38e-03
+2026-05-14 03:22:37,830 PAT.train INFO: Epoch[36] Iter[300/561] loss:3.080 reid:2.312 pc:0.008 cam:0.761 cam_acc:0.678 ID_acc:0.806 lam:0.2930 lr:6.38e-03
+2026-05-14 03:23:08,498 PAT.train INFO: Epoch[36] Iter[360/561] loss:3.055 reid:2.288 pc:0.009 cam:0.759 cam_acc:0.679 ID_acc:0.813 lam:0.2931 lr:6.38e-03
+2026-05-14 03:23:39,192 PAT.train INFO: Epoch[36] Iter[420/561] loss:3.037 reid:2.264 pc:0.008 cam:0.764 cam_acc:0.676 ID_acc:0.819 lam:0.2932 lr:6.38e-03
+2026-05-14 03:24:09,906 PAT.train INFO: Epoch[36] Iter[480/561] loss:3.007 reid:2.235 pc:0.008 cam:0.765 cam_acc:0.678 ID_acc:0.826 lam:0.2933 lr:6.38e-03
+2026-05-14 03:24:40,652 PAT.train INFO: Epoch[36] Iter[540/561] loss:2.965 reid:2.196 pc:0.007 cam:0.762 cam_acc:0.681 ID_acc:0.834 lam:0.2934 lr:6.38e-03
+2026-05-14 03:24:50,530 PAT.train INFO: Epoch 36 done. lambda_eff=0.2934 cam_acc=0.682 Time/batch:0.513s Speed:62.3img/s
+2026-05-14 03:25:22,237 PAT.train INFO: Epoch[37] Iter[60/561] loss:3.103 reid:2.317 pc:0.002 cam:0.784 cam_acc:0.665 ID_acc:0.802 lam:0.2935 lr:6.30e-03
+2026-05-14 03:26:52,128 PAT.train INFO: Epoch[37] Iter[240/561] loss:3.082 reid:2.293 pc:0.005 cam:0.784 cam_acc:0.673 ID_acc:0.806 lam:0.2937 lr:6.30e-03
+2026-05-14 03:29:21,744 PAT.train INFO: Epoch 37 done. lambda_eff=0.2942 cam_acc=0.673 Time/batch:0.486s Speed:65.9img/s
+2026-05-14 03:33:34,678 PAT.train INFO: Epoch 38 done. lambda_eff=0.2948 cam_acc=0.000 Time/batch:0.453s Speed:70.6img/s
+2026-05-14 03:37:48,838 PAT.train INFO: Epoch 39 done. lambda_eff=0.2955 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 03:42:00,510 PAT.train INFO: Epoch 40 done. lambda_eff=0.2960 cam_acc=0.000 Time/batch:0.452s Speed:70.7img/s
+2026-05-14 03:42:00,511 PAT.test INFO: Enter inferencing
+2026-05-14 03:45:15,117 PAT.test INFO: Validation Results
+2026-05-14 03:45:15,118 PAT.test INFO: mAP: 64.9%
+2026-05-14 03:45:15,118 PAT.test INFO: CMC curve, Rank-1  :79.4%
+2026-05-14 03:45:15,118 PAT.test INFO: CMC curve, Rank-5  :93.8%
+2026-05-14 03:45:15,118 PAT.test INFO: CMC curve, Rank-10 :96.9%
+2026-05-14 03:45:15,118 PAT.test INFO: total inference time: 194.60
+2026-05-14 03:45:15,119 PAT.train INFO: =====saving epoch: 40=====
+2026-05-14 03:49:52,480 PAT.train INFO: Epoch 41 done. lambda_eff=0.2965 cam_acc=0.000 Time/batch:0.495s Speed:64.6img/s
+2026-05-14 03:54:28,697 PAT.train INFO: Epoch 42 done. lambda_eff=0.2969 cam_acc=0.000 Time/batch:0.495s Speed:64.7img/s
+2026-05-14 03:59:06,997 PAT.train INFO: Epoch 43 done. lambda_eff=0.2972 cam_acc=0.000 Time/batch:0.498s Speed:64.3img/s
+2026-05-14 04:03:42,341 PAT.train INFO: Epoch 44 done. lambda_eff=0.2976 cam_acc=0.000 Time/batch:0.495s Speed:64.6img/s
+2026-05-14 04:08:19,272 PAT.train INFO: Epoch 45 done. lambda_eff=0.2978 cam_acc=0.000 Time/batch:0.495s Speed:64.6img/s
+2026-05-14 04:08:19,273 PAT.test INFO: Enter inferencing
+2026-05-14 04:11:33,670 PAT.test INFO: Validation Results
+2026-05-14 04:11:33,670 PAT.test INFO: mAP: 64.9%
+2026-05-14 04:11:33,670 PAT.test INFO: CMC curve, Rank-1  :79.5%
+2026-05-14 04:11:33,670 PAT.test INFO: CMC curve, Rank-5  :93.8%
+2026-05-14 04:11:33,670 PAT.test INFO: CMC curve, Rank-10 :97.0%
+2026-05-14 04:11:33,670 PAT.test INFO: total inference time: 194.39
+2026-05-14 04:11:33,676 PAT.train INFO: =====saving epoch: 45=====
+2026-05-14 04:15:47,012 PAT.train INFO: Epoch 46 done. lambda_eff=0.2981 cam_acc=0.000 Time/batch:0.452s Speed:70.8img/s
+2026-05-14 04:19:59,997 PAT.train INFO: Epoch 47 done. lambda_eff=0.2983 cam_acc=0.000 Time/batch:0.452s Speed:70.7img/s
+2026-05-14 04:24:12,779 PAT.train INFO: Epoch 48 done. lambda_eff=0.2985 cam_acc=0.000 Time/batch:0.453s Speed:70.7img/s
+2026-05-14 04:28:25,102 PAT.train INFO: Epoch 49 done. lambda_eff=0.2987 cam_acc=0.000 Time/batch:0.452s Speed:70.8img/s
+2026-05-14 04:32:38,496 PAT.train INFO: Epoch 50 done. lambda_eff=0.2988 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 04:32:38,497 PAT.test INFO: Enter inferencing
+2026-05-14 04:35:53,122 PAT.test INFO: Validation Results
+2026-05-14 04:35:53,372 PAT.test INFO: mAP: 64.9%
+2026-05-14 04:35:53,372 PAT.test INFO: CMC curve, Rank-1  :79.5%
+2026-05-14 04:35:53,372 PAT.test INFO: CMC curve, Rank-5  :93.9%
+2026-05-14 04:35:53,372 PAT.test INFO: CMC curve, Rank-10 :96.8%
+2026-05-14 04:35:53,372 PAT.test INFO: total inference time: 194.87
+2026-05-14 04:35:53,374 PAT.train INFO: =====saving epoch: 50=====
+2026-05-14 04:40:29,339 PAT.train INFO: Epoch 51 done. lambda_eff=0.2990 cam_acc=0.000 Time/batch:0.495s Speed:64.6img/s
+2026-05-14 04:45:06,995 PAT.train INFO: Epoch 52 done. lambda_eff=0.2991 cam_acc=0.000 Time/batch:0.497s Speed:64.4img/s
+2026-05-14 04:49:42,535 PAT.train INFO: Epoch 53 done. lambda_eff=0.2992 cam_acc=0.000 Time/batch:0.495s Speed:64.7img/s
+2026-05-14 04:54:20,140 PAT.train INFO: Epoch 54 done. lambda_eff=0.2993 cam_acc=0.000 Time/batch:0.496s Speed:64.5img/s
+2026-05-14 04:58:56,361 PAT.train INFO: Epoch 55 done. lambda_eff=0.2994 cam_acc=0.000 Time/batch:0.496s Speed:64.6img/s
+2026-05-14 04:58:56,362 PAT.test INFO: Enter inferencing
+2026-05-14 05:02:10,928 PAT.test INFO: Validation Results
+2026-05-14 05:02:10,928 PAT.test INFO: mAP: 64.9%
+2026-05-14 05:02:10,928 PAT.test INFO: CMC curve, Rank-1  :79.5%
+2026-05-14 05:02:10,928 PAT.test INFO: CMC curve, Rank-5  :93.8%
+2026-05-14 05:02:10,928 PAT.test INFO: CMC curve, Rank-10 :97.0%
+2026-05-14 05:02:10,928 PAT.test INFO: total inference time: 194.56
+2026-05-14 05:02:10,934 PAT.train INFO: =====saving epoch: 55=====
+2026-05-14 05:06:24,070 PAT.train INFO: Epoch 56 done. lambda_eff=0.2995 cam_acc=0.000 Time/batch:0.452s Speed:70.7img/s
+2026-05-14 05:10:36,564 PAT.train INFO: Epoch 57 done. lambda_eff=0.2995 cam_acc=0.000 Time/batch:0.452s Speed:70.7img/s
+2026-05-14 05:14:49,987 PAT.train INFO: Epoch 58 done. lambda_eff=0.2996 cam_acc=0.000 Time/batch:0.453s Speed:70.6img/s
+2026-05-14 05:19:03,080 PAT.train INFO: Epoch 59 done. lambda_eff=0.2996 cam_acc=0.000 Time/batch:0.453s Speed:70.6img/s
+2026-05-14 05:23:16,477 PAT.train INFO: Epoch 60 done. lambda_eff=0.2997 cam_acc=0.000 Time/batch:0.453s Speed:70.6img/s
+2026-05-14 05:23:16,477 PAT.test INFO: Enter inferencing
+2026-05-14 05:26:31,016 PAT.test INFO: Validation Results
+2026-05-14 05:26:31,016 PAT.test INFO: mAP: 64.9%
+2026-05-14 05:26:31,017 PAT.test INFO: CMC curve, Rank-1  :79.4%
+2026-05-14 05:26:31,017 PAT.test INFO: CMC curve, Rank-5  :93.7%
+2026-05-14 05:26:31,017 PAT.test INFO: CMC curve, Rank-10 :97.0%
+2026-05-14 05:26:31,017 PAT.test INFO: total inference time: 194.54
+2026-05-14 05:26:31,018 PAT.train INFO: =====saving epoch: 60=====
+2026-05-14 05:30:44,617 PAT.train INFO: Epoch 61 done. lambda_eff=0.2997 cam_acc=0.000 Time/batch:0.453s Speed:70.6img/s
+2026-05-14 05:34:58,341 PAT.train INFO: Epoch 62 done. lambda_eff=0.2997 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 05:39:11,417 PAT.train INFO: Epoch 63 done. lambda_eff=0.2998 cam_acc=0.000 Time/batch:0.453s Speed:70.6img/s
+2026-05-14 05:43:24,272 PAT.train INFO: Epoch 64 done. lambda_eff=0.2998 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 05:47:37,843 PAT.train INFO: Epoch 65 done. lambda_eff=0.2998 cam_acc=0.000 Time/batch:0.454s Speed:70.4img/s
+2026-05-14 05:47:37,843 PAT.test INFO: Enter inferencing
+2026-05-14 05:50:52,494 PAT.test INFO: Validation Results
+2026-05-14 05:50:52,495 PAT.test INFO: mAP: 64.9%
+2026-05-14 05:50:52,495 PAT.test INFO: CMC curve, Rank-1  :79.3%
+2026-05-14 05:50:52,495 PAT.test INFO: CMC curve, Rank-5  :93.8%
+2026-05-14 05:50:52,495 PAT.test INFO: CMC curve, Rank-10 :96.8%
+2026-05-14 05:50:52,495 PAT.test INFO: total inference time: 194.65
+2026-05-14 05:50:52,497 PAT.train INFO: =====saving epoch: 65=====
+2026-05-14 05:55:06,958 PAT.train INFO: Epoch 66 done. lambda_eff=0.2998 cam_acc=0.000 Time/batch:0.453s Speed:70.6img/s
+2026-05-14 05:59:20,349 PAT.train INFO: Epoch 67 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 06:03:32,841 PAT.train INFO: Epoch 68 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 06:07:46,536 PAT.train INFO: Epoch 69 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 06:11:58,946 PAT.train INFO: Epoch 70 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 06:11:58,947 PAT.test INFO: Enter inferencing
+2026-05-14 06:15:14,283 PAT.test INFO: Validation Results
+2026-05-14 06:15:14,325 PAT.test INFO: mAP: 64.9%
+2026-05-14 06:15:14,325 PAT.test INFO: CMC curve, Rank-1  :79.4%
+2026-05-14 06:15:14,325 PAT.test INFO: CMC curve, Rank-5  :93.8%
+2026-05-14 06:15:14,325 PAT.test INFO: CMC curve, Rank-10 :96.9%
+2026-05-14 06:15:14,326 PAT.test INFO: total inference time: 195.37
+2026-05-14 06:15:14,333 PAT.train INFO: =====saving epoch: 70=====
+2026-05-14 06:19:33,076 PAT.train INFO: Epoch 71 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.462s Speed:69.3img/s
+2026-05-14 06:23:46,399 PAT.train INFO: Epoch 72 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.455s Speed:70.4img/s
+2026-05-14 06:27:59,437 PAT.train INFO: Epoch 73 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 06:32:13,766 PAT.train INFO: Epoch 74 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.455s Speed:70.4img/s
+2026-05-14 06:36:26,942 PAT.train INFO: Epoch 75 done. lambda_eff=0.2999 cam_acc=0.000 Time/batch:0.454s Speed:70.4img/s
+2026-05-14 06:36:26,942 PAT.test INFO: Enter inferencing
+2026-05-14 06:39:43,199 PAT.test INFO: Validation Results
+2026-05-14 06:39:43,262 PAT.test INFO: mAP: 64.9%
+2026-05-14 06:39:43,262 PAT.test INFO: CMC curve, Rank-1  :79.4%
+2026-05-14 06:39:43,263 PAT.test INFO: CMC curve, Rank-5  :93.6%
+2026-05-14 06:39:43,263 PAT.test INFO: CMC curve, Rank-10 :96.9%
+2026-05-14 06:39:43,263 PAT.test INFO: total inference time: 196.32
+2026-05-14 06:39:43,265 PAT.train INFO: =====saving epoch: 75=====
+2026-05-14 06:44:02,221 PAT.train INFO: Epoch 76 done. lambda_eff=0.3000 cam_acc=0.000 Time/batch:0.461s Speed:69.4img/s
+2026-05-14 06:48:15,901 PAT.train INFO: Epoch 77 done. lambda_eff=0.3000 cam_acc=0.000 Time/batch:0.454s Speed:70.4img/s
+2026-05-14 06:52:29,727 PAT.train INFO: Epoch 78 done. lambda_eff=0.3000 cam_acc=0.000 Time/batch:0.455s Speed:70.4img/s
+2026-05-14 06:56:42,200 PAT.train INFO: Epoch 79 done. lambda_eff=0.3000 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 07:00:56,165 PAT.train INFO: Epoch 80 done. lambda_eff=0.3000 cam_acc=0.000 Time/batch:0.454s Speed:70.5img/s
+2026-05-14 07:00:56,165 PAT.test INFO: Enter inferencing
+2026-05-14 07:04:11,189 PAT.test INFO: Validation Results
+2026-05-14 07:04:11,189 PAT.test INFO: mAP: 64.9%
+2026-05-14 07:04:11,189 PAT.test INFO: CMC curve, Rank-1  :79.6%
+2026-05-14 07:04:11,189 PAT.test INFO: CMC curve, Rank-5  :93.7%
+2026-05-14 07:04:11,189 PAT.test INFO: CMC curve, Rank-10 :97.0%
+2026-05-14 07:04:11,189 PAT.test INFO: total inference time: 195.02
+2026-05-14 07:04:11,191 PAT.train INFO: =====saving epoch: 80=====
+/home/alumnos/e558708/.conda/envs/pat/lib/python3.10/site-packages/torch/nn/init.py:412: UserWarning: Initializing zero-element tensors is a no-op
+  warnings.warn("Initializing zero-element tensors is a no-op")
+using Transformer_type: part token vit as a backbone
+using stride: [16, 16], and patch number is num_y16 * num_x8
+using drop_out rate is : 0.0
+using attn_drop_out rate is : 0.0
+using drop_path rate is : 0.1
+Resized position embedding from size:torch.Size([1, 197, 1024]) to size: torch.Size([1, 132, 1024]) with height:16 width: 8
+Load 297 / 299 layers.
+Loading pretrained ImageNet model......from /media/DiscoLocal/IPCV/UE-ReID/Part-Aware-Transformer-main/model/jx_vit_large_p16_224-4ee7a4dc.pth
+===========building our part attention vit===========
+2026-05-14 07:04:32,043 PAT.train INFO: Number of parameter: 304.27M
+Loading trained model from models/./exp23_exp17_80ep/part_attention_vit_80.pth
+load weights from part_attention_vit_80.pth
+2026-05-14 07:04:33,072 PAT INFO: => Loaded UrbanElementsReID
+2026-05-14 07:04:33,072 PAT INFO:   ----------------------------------------
+2026-05-14 07:04:33,072 PAT INFO:   subset   | # ids | # images | # cameras
+2026-05-14 07:04:33,072 PAT INFO:   ----------------------------------------
+2026-05-14 07:04:33,072 PAT INFO:   query    |  1088 |    11175 |         3
+2026-05-14 07:04:33,072 PAT INFO:   gallery  |  1088 |    11175 |         3
+2026-05-14 07:04:33,073 PAT INFO:   ----------------------------------------
+2026-05-14 07:04:33,073 PAT.test INFO: Enter inferencing
+2026-05-14 07:07:48,717 PAT.test INFO: Validation Results
+2026-05-14 07:07:48,746 PAT.test INFO: mAP: 64.9%
+2026-05-14 07:07:48,746 PAT.test INFO: CMC curve, Rank-1  :79.4%
+2026-05-14 07:07:48,746 PAT.test INFO: CMC curve, Rank-5  :93.7%
+2026-05-14 07:07:48,747 PAT.test INFO: CMC curve, Rank-10 :96.9%
+2026-05-14 07:07:48,747 PAT.test INFO: total inference time: 195.46
+saving final checkpoint. Do not interrupt!
+done!
